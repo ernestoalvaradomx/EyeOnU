@@ -32,9 +32,27 @@ class RawFrame(Base):
 class Frame(Base):
     id:Mapped[int] = Column(Integer, primary_key=True)
     raw_frame_id: Mapped[int] = mapped_column(ForeignKey("raw_frame.id"))
-    rawFrame:Mapped["RawFrame"]= relationship(back_populates="frame")
-    sightings:Mapped["Sighting"]= relationship(back_populates="frame")
+    raw_frame:Mapped["RawFrame"]= relationship(back_populates="frame")
+    sightings:Mapped[List[Sighting]]= relationship(back_populates="frame")
 
     def __repr__(self):
-        return self.name
+        return ""
 
+class Sighting(Base):
+    id:Mapped[int] = Column(Integer, primary_key=True)
+    pixel_area:Mapped[LargeBinary] = Column(LargeBinary)
+    frame_id: Mapped[int] = mapped_column(ForeignKey("frame.id"))
+    frame:Mapped["Frame"]= relationship(back_populates="sightings")
+    individual_id: Mapped[int] = mapped_column(ForeignKey("individual.id"))
+    individual:Mapped["Individual"]= relationship(back_populates="sightings")
+
+    def __repr__(self):
+        return ""
+
+class Individual(Base):
+    id:Mapped[int] = Column(Integer, primary_key=True)
+    mugshot:Mapped[LargeBinary] = Column(LargeBinary)
+    sightings:Mapped[List[Sighting]]= relationship(back_populates="individual")
+
+    def __repr__(self):
+        return ""
