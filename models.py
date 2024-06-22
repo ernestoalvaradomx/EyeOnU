@@ -2,7 +2,6 @@ from sqlalchemy.sql import func
 
 from sqlalchemy import Column, Integer, String, ForeignKey, Date,Binary, DateTime, LargeBinary
 from sqlalchemy.orm import relationship
-from flask_appbuilder import Model
 from __future__ import annotations
 from typing import List
 
