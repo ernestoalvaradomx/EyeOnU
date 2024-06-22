@@ -3,8 +3,8 @@ from src.util.database.db import db
 from sqlalchemy import ForeignKey, Integer, DateTime
 from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.orm import Mapped
-from src.models.sightingModel import Sighting
-from src.models.incidentModel import Incident
+from .sightingModel import Sighting
+from .incidentModel import Incident
 
 class Alert(db.Model):
     id:Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)

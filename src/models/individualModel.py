@@ -4,9 +4,8 @@ from sqlalchemy import Integer, LargeBinary
 from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.orm import Mapped
 from typing import List
-from src.models.sightingModel import Sighting
 
 class Individual(db.Model):
     id:Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     mugshot:Mapped[LargeBinary] = mapped_column(LargeBinary)
-    sightings:Mapped[List[Sighting]]= relationship('Sighting', backref='sighting')
+    sightings:Mapped[List["Sighting"]]= relationship('Sighting', backref='sighting')

@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from src.routes.frameProcessingRoute import frameProcessingRoute 
 from src.routes.testORMRoute import testORMRoute
 from src.util.database.db import db
@@ -13,6 +14,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhos
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+migrate = Migrate(app, db)
+
+# Importa los modelos para que SQLAlchemy los registre
+import src.models 
 
 with app.app_context():
     db.create_all()

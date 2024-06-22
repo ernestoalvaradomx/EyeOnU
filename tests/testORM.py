@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import unittest
 from app import app
 from unittest.mock import patch
-from src.models.userTestModel import User
+from src.models.userTestModel import UserTest
 
 class TestApp(unittest.TestCase):
 
@@ -33,7 +33,7 @@ class TestApp(unittest.TestCase):
     @patch('app.db.session.add')
     @patch('app.db.session.commit')
     def test_createUser_200(self, mock_add, mock_commit):
-        newUser = User(name="Julieta", 
+        newUser = UserTest(name="Julieta", 
                        lastName="Estrada",
                        age=22)
         response = self.app.post('/test-ORM/users', json=newUser.toJson())
@@ -44,7 +44,7 @@ class TestApp(unittest.TestCase):
     @patch('app.db.session.add')
     @patch('app.db.session.commit')
     def test_updateUser_200(self, mock_add, mock_commit):
-        updateUser = User(name="Leo", 
+        updateUser = UserTest(name="Leo", 
                        lastName="Llera",
                        age=23)
         response = self.app.put('/test-ORM/users/1', json=updateUser.toJson())

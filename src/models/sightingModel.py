@@ -3,9 +3,6 @@ from src.util.database.db import db
 from sqlalchemy import ForeignKey, Integer, LargeBinary
 from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.orm import Mapped
-from src.models.frameModel import Frame
-from src.models.individualModel import Individual
-from src.models.alertModel import Alert
 
 class Sighting(db.Model):
     id:Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
@@ -13,6 +10,6 @@ class Sighting(db.Model):
     pixel_area:Mapped[LargeBinary] = mapped_column(LargeBinary)
     frame_id:Mapped[int] = mapped_column(ForeignKey("frame.id"))
     individual_id:Mapped[int] = mapped_column(ForeignKey("individual.id"))
-    frame:Mapped[Frame]= relationship('Frame', backref='frame')
-    individual:Mapped[Individual]= relationship('Individual', backref='individual')
-    alert:Mapped[Alert]= relationship('Alert', backref='alert')
+    frame:Mapped["Frame"]= relationship('Frame', backref='frame')
+    individual:Mapped["Individual"]= relationship('Individual', backref='individual')
+    alert:Mapped["Alert"]= relationship('Alert', backref='alert')

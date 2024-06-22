@@ -1,5 +1,4 @@
 from flask import Blueprint, request, jsonify
-from src.models.userTestModel import User
 from src.util.database.db import db
 
 import src.services.frameProcessingService as frameProcessingService

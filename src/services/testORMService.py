@@ -1,14 +1,14 @@
 from flask import  request, jsonify
 from src.util.database.db import db
-from src.models.userTestModel import User
+from src.models.userTestModel import UserTest
 
 def listUser():
-    users = User.query.all()
+    users = UserTest.query.all()
     usersList = [user.toJson() for user in users]
     return jsonify(usersList), 200
 
 def getUser(idUser):
-    user = User.query.get(idUser)
+    user = UserTest.query.get(idUser)
     if user:
         return jsonify(user.toJson()), 200
     else:
@@ -17,7 +17,7 @@ def getUser(idUser):
 def createUser(request):
     if request.is_json:
         data = request.get_json()
-        newUser = User(name=data['name'], 
+        newUser = UserTest(name=data['name'], 
                         lastName=data['lastName'],
                         age=data['age'])
 
@@ -29,7 +29,7 @@ def createUser(request):
         return jsonify({"error": "The request body is not in JSON format"}), 400
     
 def updateUser(idUser, request):
-    user = User.query.get(idUser)
+    user = UserTest.query.get(idUser)
     if user:
         if request.is_json:
             data = request.get_json()
@@ -47,7 +47,7 @@ def updateUser(idUser, request):
         return jsonify({"error": "User not found"}), 404
     
 def deleteUser(idUser):
-    user = User.query.get(idUser)
+    user = UserTest.query.get(idUser)
     if user:
         db.session.delete(user)
         db.session.commit()
