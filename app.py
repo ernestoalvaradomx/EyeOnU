@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from src.frameprocessing.routes.frameProcessingRoute import frameProcessingRoute 
-from src.frameprocessing.routes.testORMRoute import testORMRoute
+from src.routes.frameProcessingRoute import frameProcessingRoute 
+from src.routes.testORMRoute import testORMRoute
 from src.util.database.db import db
 
 app = Flask(__name__)
