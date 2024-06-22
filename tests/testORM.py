@@ -4,10 +4,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 import unittest
 from app import app
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from src.models.userTestModel import User
-from src.util.database.db import db
-from flask_sqlalchemy import SQLAlchemy
 
 class TestApp(unittest.TestCase):
 
