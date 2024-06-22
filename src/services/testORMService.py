@@ -1,6 +1,6 @@
 from flask import  request, jsonify
 from src.util.database.db import db
-from src.frameprocessing.models.userTestModel import User
+from src.models.userTestModel import User
 
 def listUser():
     users = User.query.all()

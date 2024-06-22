@@ -1,6 +1,6 @@
 from flask import Blueprint, request,  jsonify
 
-import src.services.testORMService as frameprocessingService
+import src.frameprocessing.services.testORMService as frameprocessingService
 
 testORMRoute = Blueprint('testORMRoute', __name__)
 
