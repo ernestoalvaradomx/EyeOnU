@@ -1,6 +1,6 @@
 from flask import Blueprint, request,  jsonify
 
-import src.services.testORMService as frameprocessingService
+import src.services.testORMService as testORMService
 
 testORMRoute = Blueprint('testORMRoute', __name__)
 
@@ -10,20 +10,20 @@ def home():
 
 @testORMRoute.route('/users', methods=['GET'])
 def listUser():
-    return frameprocessingService.listUser()
+    return testORMService.listUser()
     
 @testORMRoute.route('/users/<int:idUser>', methods=['GET'])
 def getUser(idUser):
-    return frameprocessingService.getUser(idUser)
+    return testORMService.getUser(idUser)
 
 @testORMRoute.route("/users", methods=['POST'])
 def createUser():
-    return frameprocessingService.createUser(request)
+    return testORMService.createUser(request)
      
 @testORMRoute.route('/users/<int:idUser>', methods=['PUT'])
 def updateUser(idUser):
-    return frameprocessingService.updateUser(idUser, request)
+    return testORMService.updateUser(idUser, request)
     
 @testORMRoute.route('/users/<int:idUser>', methods=['DELETE'])
 def deleteUser(idUser):
-    return frameprocessingService.deleteUser(idUser)
+    return testORMService.deleteUser(idUser)
