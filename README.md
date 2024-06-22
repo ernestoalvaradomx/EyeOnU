@@ -1,6 +1,7 @@
 # EyeOnU
 
 
+Siempre que se creen cambios hacer pull y ejecutar el archivo `requirements.txt` o instalar manualmente las dependencias 
 
 ## Instalaciones:
 
@@ -8,6 +9,8 @@
 pip install Flask-SQLAlchemy
 pip install Flask
 pip install sqlalchemy psycopg2-binary
+pip install opencv-python
+
 ```
 
 ## Instalación con requirements.txt
