@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from src.frameprocessing.routes.frameProcessing import frameProcessing 
-from src.frameprocessing.routes.testORM import testORM
+from src.frameprocessing.routes.frameProcessingRoute import frameProcessingRoute 
+from src.frameprocessing.routes.testORMRoute import testORMRoute
 from src.util.database.db import db
 
 app = Flask(__name__)
@@ -18,8 +18,8 @@ with app.app_context():
     db.create_all()
 
 # Configiracion de rutas del proyecto
-app.register_blueprint(frameProcessing)
-app.register_blueprint(testORM)
+app.register_blueprint(frameProcessingRoute, url_prefix='/frame-processing')
+app.register_blueprint(testORMRoute, url_prefix='/test-ORM')
 
 if __name__ == "__main__":
     app.run(debug=True)

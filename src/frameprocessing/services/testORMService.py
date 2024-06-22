@@ -1,34 +1,25 @@
-from flask import Blueprint, request, jsonify
-from src.frameprocessing.models.userTestModel import User
+from flask import  request, jsonify
 from src.util.database.db import db
+from src.frameprocessing.models.userTestModel import User
 
-testORM = Blueprint('testORM', __name__)
-
-@testORM.route("/", methods=['GET'])
-def home():
-    return "Home"
-
-@testORM.route('/users', methods=['GET'])
 def listUser():
     users = User.query.all()
     usersList = [user.toJson() for user in users]
     return jsonify(usersList), 200
 
-@testORM.route('/users/<int:idUser>', methods=['GET'])
 def getUser(idUser):
     user = User.query.get(idUser)
     if user:
         return jsonify(user.toJson()), 200
     else:
         return jsonify({"error": "User not found"}), 404
-
-@testORM.route("/users", methods=['POST'])
+    
 def createUser():
     if request.is_json:
         data = request.get_json()
         newUser = User(name=data['name'], 
-                       lastName=data['lastName'],
-                       age=data['age'])
+                        lastName=data['lastName'],
+                        age=data['age'])
 
         db.session.add(newUser)
         db.session.commit()
@@ -37,7 +28,6 @@ def createUser():
     else:
         return jsonify({"error": "The request body is not in JSON format"}), 400
     
-@testORM.route('/users/<int:idUser>', methods=['PUT'])
 def updateUser(idUser):
     user = User.query.get(idUser)
     if user:
@@ -56,7 +46,6 @@ def updateUser(idUser):
     else:
         return jsonify({"error": "User not found"}), 404
     
-@testORM.route('/users/<int:idUser>', methods=['DELETE'])
 def deleteUser(idUser):
     user = User.query.get(idUser)
     if user:
