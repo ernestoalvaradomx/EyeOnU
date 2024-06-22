@@ -14,7 +14,7 @@ def getUser(idUser):
     else:
         return jsonify({"error": "User not found"}), 404
     
-def createUser():
+def createUser(request):
     if request.is_json:
         data = request.get_json()
         newUser = User(name=data['name'], 
@@ -28,7 +28,7 @@ def createUser():
     else:
         return jsonify({"error": "The request body is not in JSON format"}), 400
     
-def updateUser(idUser):
+def updateUser(idUser, request):
     user = User.query.get(idUser)
     if user:
         if request.is_json:

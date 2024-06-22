@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, request,  jsonify
 
 import src.frameprocessing.services.testORMService as frameprocessingService
 
@@ -18,11 +18,11 @@ def getUser(idUser):
 
 @testORMRoute.route("/users", methods=['POST'])
 def createUser():
-    return frameprocessingService.createUser()
+    return frameprocessingService.createUser(request)
      
 @testORMRoute.route('/users/<int:idUser>', methods=['PUT'])
 def updateUser(idUser):
-    return frameprocessingService.updateUser(idUser)
+    return frameprocessingService.updateUser(idUser, request)
     
 @testORMRoute.route('/users/<int:idUser>', methods=['DELETE'])
 def deleteUser(idUser):
