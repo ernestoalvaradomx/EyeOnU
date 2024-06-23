@@ -16,7 +16,7 @@ class TestApp(unittest.TestCase):
         pass  
         
     def test_home_200(self):
-        response = self.app.get('/test-ORM/')
+        response = self.app.get('/frame-processing/')
         data = response.get_json()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['message'], 'Home')
