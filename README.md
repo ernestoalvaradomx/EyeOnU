@@ -14,10 +14,15 @@ pip install flask-migrate
 ```
 
 ## Crear tablas
+```
 flask db init
+```
+```
 flask db migrate -m "Initial migration"
+```
+```
 flask db upgrade
-
+```
 ## Instalación con requirements.txt
 Crea un entorno virtual de Python
 ```bash 
