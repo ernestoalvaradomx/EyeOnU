@@ -12,3 +12,4 @@ class RawFrameService:
         frame_bytes = cv2.imencode('.jpg', frame)[1].tobytes()
         raw_frame = RawFrame(bytes=frame_bytes)
         return raw_frame
+
