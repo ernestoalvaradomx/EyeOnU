@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from src.routes.frameProcessingRoute import frameProcessingRoute 
 from src.routes.testORMRoute import testORMRoute
+from src.routes.raw_frame_route import rawFrameRoute
 from src.util.database.db import db
 
 app = Flask(__name__)
@@ -25,6 +26,7 @@ with app.app_context():
 # Configiracion de rutas del proyecto
 app.register_blueprint(frameProcessingRoute, url_prefix='/frame-processing')
 app.register_blueprint(testORMRoute, url_prefix='/test-ORM')
+app.register_blueprint(rawFrameRoute, url_prefix='/capture-frame')
 
 if __name__ == "__main__":
     app.run(debug=True)
