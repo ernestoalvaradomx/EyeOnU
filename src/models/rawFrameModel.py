@@ -1,22 +1,23 @@
-import base64
-from sqlalchemy import Column, Integer, LargeBinary, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
-from src.util.database.db import db
 from sqlalchemy.sql import func
+from src.util.database.db import db
+from sqlalchemy import Integer, LargeBinary, DateTime
+from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy.orm import Mapped
+from src.models.frameModel import Frame
 
 class RawFrame(db.Model):
-    __tablename__ = 'raw_frame'
+    id:Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
+    pixels:Mapped[LargeBinary] = mapped_column(LargeBinary)
+    creation_time:Mapped[DateTime] =  mapped_column(DateTime(timezone=True), default=func.now())
+    frame:Mapped["Frame"] = relationship(back_populates='raw_frame')
 
-    id = Column(Integer, primary_key=True, nullable=False)
-    pixels = Column(LargeBinary)
-    creation_time = Column(DateTime(timezone=True), default=func.now())
-
-    def __init__(self, pixels):
+    def __init__(self, pixels, creationTime):
         self.pixels = pixels
+        self.creationTime = creationTime
 
     def toJson(self):
         return {
-            'id': self.id,
-            'pixels': base64.b64encode(self.pixels).decode('utf-8'),
-            'creation_time': self.creation_time.isoformat(),
-        }
+        'id':self.id,
+        'pixels':self.pixels,
+        'creationTime':self.creationTime,
+    }

@@ -9,5 +9,5 @@ class Incident(db.Model):
     creation_time:Mapped[DateTime] =  mapped_column(DateTime(timezone=True), default=func.now())
     alert_id: Mapped[int] = mapped_column(ForeignKey("alert.id"))
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    alert:Mapped["Alert"]= relationship('Alert', backref='alert')
-    user:Mapped["User"]= relationship('User', backref='user')
+    alert:Mapped["Alert"]= relationship( back_populates='incident')
+    user:Mapped["User"]= relationship( back_populates='incidents')

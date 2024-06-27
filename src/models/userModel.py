@@ -8,4 +8,4 @@ from typing import List
 class User(db.Model):
     id:Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     creation_time:Mapped[DateTime] =  mapped_column(DateTime(timezone=True), default=func.now())
-    user:Mapped[List["Incident"]]= relationship('Incident', backref='incident')
+    incidents:Mapped[List["Incident"]]= relationship( back_populates='user')
