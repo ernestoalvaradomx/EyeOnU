@@ -1,5 +1,6 @@
 import cv2
-from raw_frame import RawFrame
+from src.models.rawFrameModel import RawFrame
+
 from PIL import Image
 import matplotlib.pyplot as plt
 import os
