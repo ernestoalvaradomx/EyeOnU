@@ -12,4 +12,3 @@ class Frame(db.Model):
     raw_frame_id = db.Column(db.Integer, db.ForeignKey('raw_frame.id'))
     raw_frame = relationship('RawFrame', back_populates='frame')
     sightings = relationship('Sighting', back_populates='frame')
-

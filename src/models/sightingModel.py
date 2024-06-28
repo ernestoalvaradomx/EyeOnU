@@ -15,3 +15,4 @@ class Sighting(db.Model):
     frame = relationship('Frame', back_populates='sightings')
     individual = relationship('Individual', back_populates='sightings')
     alert = relationship('Alert', back_populates='sighting')
+    
