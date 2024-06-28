@@ -4,6 +4,7 @@ from src.models.rawFrameModel import RawFrame
 from PIL import Image
 import matplotlib.pyplot as plt
 import os
+from datetime import datetime
 
 def capture_frame(id_cam):
     camara = cv2.VideoCapture(id_cam)
@@ -13,15 +14,15 @@ def capture_frame(id_cam):
     if not ret:
         raise Exception("Error: Failed to capture frame.")
     frame_bytes = cv2.imencode('.jpg', frame)[1].tobytes()
-    raw_frame = RawFrame(id=1, pixels=frame_bytes)
+    raw_frame = RawFrame(frame_bytes,datetime.now())
     # Guarda los bytes del frame en un archivo
     with open('captured_frame.jpg', 'wb') as f:
         f.write(frame_bytes)
     return raw_frame
 
 def main():
-    frame = capture_frame(0)
-    print(frame.to_dict())
+    frame = capture_frame("rtsp://rtspstream:fd4cb722051a235e5a8605a663beedf3@zephyr.rtsp.stream/movie")
+    print(frame)
 
     # Verificar la existencia de captured_frame.jpg antes de abrirlo
     filename = 'captured_frame.jpg'

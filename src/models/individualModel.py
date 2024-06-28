@@ -8,4 +8,4 @@ from typing import List
 class Individual(db.Model):
     id:Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     mugshot:Mapped[LargeBinary] = mapped_column(LargeBinary)
-    sightings:Mapped[List["Sighting"]]= relationship('Sighting', backref='sighting')
+    sightings:Mapped[List["Sighting"]]= relationship( back_populates='individual')

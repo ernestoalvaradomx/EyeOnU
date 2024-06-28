@@ -1,2 +1,5 @@
 venv/
 eyeonu/
+captured_frame.jpg
+__pycache__
+bin/
