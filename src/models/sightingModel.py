@@ -5,11 +5,13 @@ from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.orm import Mapped
 
 class Sighting(db.Model):
-    id:Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
+    __tablename__ = 'sighting'
+
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     # This doesn't have to be binary, only a representation of the area in which the face of the individual appears within the frame
-    pixel_area:Mapped[LargeBinary] = mapped_column(LargeBinary)
-    frame_id:Mapped[int] = mapped_column(ForeignKey("frame.id"))
-    individual_id:Mapped[int] = mapped_column(ForeignKey("individual.id"))
-    frame:Mapped["Frame"]= relationship(back_populates='sightings')
-    individual:Mapped["Individual"]= relationship( back_populates='sightings')
-    alert:Mapped["Alert"]= relationship( back_populates='sighting')
+    pixel_area = db.Column(db.LargeBinary)
+    frame_id = db.Column(db.Integer, db.ForeignKey('frame.id'))
+    individual_id = db.Column(db.Integer, db.ForeignKey('individual.id'))
+    frame = relationship('Frame', back_populates='sightings')
+    individual = relationship('Individual', back_populates='sightings')
+    alert = relationship('Alert', back_populates='sighting')
