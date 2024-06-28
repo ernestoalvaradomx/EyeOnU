@@ -5,6 +5,8 @@ from src.routes.frameProcessingRoute import frameProcessingRoute
 from src.routes.testORMRoute import testORMRoute
 from src.routes.raw_frame_route import rawFrameRoute
 from src.util.database.db import db
+from src.services.identifier_deamon import IdentifierDaemon
+from threading import Thread
 
 app = Flask(__name__)
 
@@ -29,4 +31,7 @@ app.register_blueprint(testORMRoute, url_prefix='/test-ORM')
 app.register_blueprint(rawFrameRoute, url_prefix='/capture-frame')
 
 if __name__ == "__main__":
+    identifier_daemon = IdentifierDaemon()
+    thread = Thread(target=identifier_daemon.run)
+    thread.start()
     app.run(debug=True)

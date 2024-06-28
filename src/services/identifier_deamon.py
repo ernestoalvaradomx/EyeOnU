@@ -3,7 +3,7 @@ from src.services.raw_frame_service import RawFrameService
 from src.models.sightingModel import Sighting
 from src.models.frameModel import Frame
 from src.util.database.db import db
-class IdentifierDeamon:
+class IdentifierDaemon:
     def __init__(self):
         self.running = True
         self.raw_frame_service = RawFrameService()
@@ -17,7 +17,8 @@ class IdentifierDeamon:
     def run(self):
         while self.running:
             raw_frame = self.raw_frame_service.capture_frame(0)
-            #Logica para pasar al servicio de sightings y si lo que regresa tiene un individual persistir: data por ejemplo
+            #Logica para pasar al servicio de sightings y si lo que regresa tiene un individual persistir
+            #data de ejemplo: 
             sightings_data = [
                 {'pixels_area': 'area1', 'individual': 'individual1'},
                 {'pixels_area': 'area2', 'individual': 'individual2'}
