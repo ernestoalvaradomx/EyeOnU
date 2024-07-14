@@ -1,3 +1,4 @@
+.env
 venv/
 eyeonu/
 captured_frame.jpg

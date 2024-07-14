@@ -1,12 +1,22 @@
 import sys
 import os
+
+from dotenv import load_dotenv
+from sqlalchemy import Null
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import unittest
+import requests
 from app import app
 from unittest.mock import patch
+from src.services.frameProcessingService import freameProcessing, deleteFace
+from src.util.aws import rekognition
 
 class TestApp(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(self):
+        load_dotenv()
 
     def setUp(self): # Se ejecuta al iniciar cada prueba
         app.config['TESTING'] = True
@@ -20,6 +30,23 @@ class TestApp(unittest.TestCase):
         data = response.get_json()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['message'], 'Home')
+
+    def test_freameProcessing_200(self):
+        url = 'https://e00-elmundo.uecdn.es/assets/multimedia/imagenes/2024/04/23/17138798885408.jpg'
+        img = requests.get(url).content
+        data = freameProcessing(img)
+
+        self.assertEqual(data.sightings[0].collection_id, '13996c4e-0c81-46f1-88d4-7082441b3408')
+
+    def test_freameProcessingUploadFace_200(self):
+        url = 'https://mx.web.img3.acsta.net/c_310_420/pictures/15/05/15/16/30/134942.jpg'
+        img = requests.get(url).content
+        data = freameProcessing(img)
+
+        print(data.sightings[0].collection_id)
+        
+        response = deleteFace(data.sightings[0].collection_id)
+        self.assertEqual(response['DeletedFaces'], [data.sightings[0].collection_id])
 
 if __name__ == '__main__':
     unittest.main()

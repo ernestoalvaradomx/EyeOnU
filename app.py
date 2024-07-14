@@ -5,8 +5,11 @@ from src.routes.frameProcessingRoute import frameProcessingRoute
 from src.routes.testORMRoute import testORMRoute
 from src.routes.raw_frame_route import rawFrameRoute
 from src.util.database.db import db
+from dotenv import load_dotenv
 
 app = Flask(__name__)
+
+load_dotenv()
 
 # Configurar la conexión a la base de datos
 # Ejemplo de URL de conexion postgresql://tu-usuario:tu-contraseña@tu-direccion-ip-externa:5432/tu-nombre-de-base-de-datos
