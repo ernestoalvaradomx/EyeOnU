@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 
 app = Flask(__name__)
 
+# Carga variables de entorno 
 load_dotenv()
 
 # Configurar la conexión a la base de datos

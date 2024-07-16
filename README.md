@@ -11,6 +11,9 @@ pip install Flask
 pip install sqlalchemy psycopg2-binary
 pip install opencv-python
 pip install flask-migrate
+pip install google-generativeai
+pip install boto3
+pip install python-dotenv
 ```
 
 ## Crear tablas
