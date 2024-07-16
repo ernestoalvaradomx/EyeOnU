@@ -50,4 +50,4 @@ class IdentifierDaemon:
 
                 except Exception as e:
                     session.rollback()
-                    print(f"Error: {e}")
+                    print(f"Error: {e}")     
