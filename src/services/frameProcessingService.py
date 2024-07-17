@@ -12,42 +12,6 @@ from src.models.frameModel import Frame
 from src.util.aws import rekognition
 from src.util.gemini import model
 
-# def plotBoundingBoxes(img, objectAndPositions):
-#     width, height = img.size
-#     # print(img.size)
-
-#     # Create a drawing object
-#     draw = ImageDraw.Draw(img)
-
-#     # Define a list of colors
-#     # colors = ['blue']
-
-#     # Iterate over the noun phrases and their positions
-#     for i, (object, (y1, x1, y2, x2)) in enumerate(
-#         objectAndPositions):
-#         if object != 'objects':
-#           # Select a color from the list
-#           # color = colors[i % len(colors)]
-#           color = 'orange'
-
-#           # Convert normalized coordinates to absolute coordinates
-#           absX1 = int((x1 / 1000) * width)
-#           absY1 = int((y1 / 1000) * height)
-#           absX2 = int((x2 / 1000) * width)
-#           absY2 = int((y2 / 1000 )* height)
-
-#           # print(abs_x1, abs_y1, abs_x2, absY2)
-
-#           # Draw the bounding box
-#           draw.rectangle(
-#               ((absX1, absY1), (absX2, absY2)), outline=color, width=4
-#           )
-
-#           # Draw the text
-#           draw.text((absX1 + 8, absY1 + 8), object, fill=color)
-
-#     return img
-
 def boxesWithLabel(text: str) -> dict:
   text = text.split("```\n")[0]
   return json.loads(text.strip("```").strip("python").strip("json").replace("'", '"').replace('\n', '').replace(',}', '}'))

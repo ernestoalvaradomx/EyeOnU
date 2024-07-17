@@ -41,7 +41,7 @@ class TestApp(unittest.TestCase):
         img = requests.get(url).content
         data = freameProcessing(RawFrame(pixels=img, creationTime=Null))
 
-        print(data.sightings[0].collection_id)
+        # print(data.sightings[0].collection_id)
         
         response = deleteFace(data.sightings[0].collection_id)
         self.assertEqual(response['DeletedFaces'], [data.sightings[0].collection_id])
