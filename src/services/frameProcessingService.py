@@ -6,6 +6,7 @@ import requests
 import hashlib
 
 from sqlalchemy import Null
+from src.models.rawFrameModel import RawFrame
 from src.models.sightingModel import Sighting
 from src.models.frameModel import Frame
 from src.util.aws import rekognition
@@ -47,11 +48,11 @@ from src.util.gemini import model
 
 #     return img
 
-def boxesWithLabel(text):
+def boxesWithLabel(text: str) -> dict:
   text = text.split("```\n")[0]
   return json.loads(text.strip("```").strip("python").strip("json").replace("'", '"').replace('\n', '').replace(',}', '}'))
 
-def getNormalizedCoordinates(img, coordinates):
+def getNormalizedCoordinates(img, coordinates: list[str]) -> list[int]:
     width, height = img.size
 
     coordinates = [int(x) for x in coordinates]
@@ -64,7 +65,7 @@ def getNormalizedCoordinates(img, coordinates):
 
     return [absX1, absY1, absX2, absY2]
 
-def hashImage(imgBytes):
+def hashImage(imgBytes: bytes) -> str:
     hashMD5 = hashlib.md5()
     hashMD5.update(imgBytes)
     hashMD5 = hashMD5.hexdigest()
@@ -72,13 +73,13 @@ def hashImage(imgBytes):
 
     return hashMD5
 
-def deleteFace(FaceId):
+def deleteFace(FaceId: str) -> dict:
     return rekognition.delete_faces(
             CollectionId='individualFaces',
             FaceIds=[FaceId]
         )
 
-def uploadFace(img, sighting):
+def uploadFace(img: Image, sighting: Sighting) -> Sighting:
     with io.BytesIO() as output:
         img.save(output, format='JPEG')
         imgBytes = output.getvalue()
@@ -94,7 +95,7 @@ def uploadFace(img, sighting):
 
     return sighting
 
-def faceRekognition(img, sighting):
+def faceRekognition(img: Image, sighting: Sighting) -> Sighting:
     img = img.crop(sighting.face_coordinates)
     with io.BytesIO() as output:
         img.save(output, format='JPEG')
@@ -120,8 +121,8 @@ def faceRekognition(img, sighting):
 
     return sighting
 
-def freameProcessing(rawFrame):
-    img = Image.open(io.BytesIO(rawFrame)).resize((512, 512))
+def freameProcessing(rawFrame: RawFrame) -> Frame:
+    img = Image.open(io.BytesIO(rawFrame.pixels))
     response = model.generate_content([
         img,
         (
