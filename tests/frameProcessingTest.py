@@ -41,10 +41,24 @@ class TestApp(unittest.TestCase):
         img = requests.get(url).content
         data = freameProcessing(RawFrame(pixels=img, creationTime=Null))
 
-        print(data.sightings[0].collection_id)
+        # print(data.sightings[0].collection_id)
         
-        response = deleteFace(data.sightings[0].collection_id)
+        response = deleteFace([data.sightings[0].collection_id])
         self.assertEqual(response['DeletedFaces'], [data.sightings[0].collection_id])
+
+    def test_freameProcessingDangerousObject_200(self):
+        url = 'https://es.web.img3.acsta.net/r_1280_720/medias/nmedia/18/70/46/05/19119896.jpg'
+        img = requests.get(url).content
+        data = freameProcessing(RawFrame(pixels=img, creationTime=Null))
+
+        print("len: ", len(data.sightings))
+
+        dangerousObject = any(sighting.object_coordinates for sighting in data.sightings if sighting.object_coordinates)
+        self.assertEqual(True, dangerousObject)
+        
+        faceIdList = [sighting.collection_id for sighting in data.sightings]
+        response = deleteFace(faceIdList)
+        self.assertEqual(response['DeletedFaces'], faceIdList)
 
 if __name__ == '__main__':
     unittest.main()

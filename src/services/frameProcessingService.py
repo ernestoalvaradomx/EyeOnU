@@ -4,6 +4,7 @@ import io
 import os
 import requests
 import hashlib
+import botocore
 
 from sqlalchemy import Null
 from src.models.rawFrameModel import RawFrame
@@ -73,10 +74,10 @@ def hashImage(imgBytes: bytes) -> str:
 
     return hashMD5
 
-def deleteFace(FaceId: str) -> dict:
+def deleteFace(faceIdList: list[str]) -> dict:
     return rekognition.delete_faces(
             CollectionId='individualFaces',
-            FaceIds=[FaceId]
+            FaceIds=faceIdList
         )
 
 def uploadFace(img: Image, sighting: Sighting) -> Sighting:
@@ -90,6 +91,11 @@ def uploadFace(img: Image, sighting: Sighting) -> Sighting:
         ExternalImageId=hashImage(imgBytes),
         DetectionAttributes=['ALL']
     )
+    # print(response)
+
+    if len(response['FaceRecords']) == 0:
+        print(response['UnindexedFaces'][0]['Reasons'])
+        return sighting
 
     sighting.collection_id = response['FaceRecords'][0]['Face']['FaceId']
 
@@ -101,13 +107,18 @@ def faceRekognition(img: Image, sighting: Sighting) -> Sighting:
         img.save(output, format='JPEG')
         imgBytes = output.getvalue()
 
-    response = rekognition.search_faces_by_image(
-        CollectionId='individualFaces',
-        Image={'Bytes': imgBytes},
-        MaxFaces=1,
-        FaceMatchThreshold=95
-    )
-
+    try:
+        response = rekognition.search_faces_by_image(
+            CollectionId='individualFaces',
+            Image={'Bytes': imgBytes},
+            MaxFaces=1,
+            FaceMatchThreshold=95
+        )
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == 'InvalidParameterException' and 'no faces in the image' in e.response['Error']['Message']:
+            # print("no se encontraron caras en la imagen")
+            return sighting
+        
     if response['FaceMatches']:
         matchFace = response['FaceMatches'][0]
         id = matchFace['Face']['FaceId']
@@ -131,10 +142,12 @@ def freameProcessing(rawFrame: RawFrame) -> Frame:
             " bounding box in the format: {'people': [{'person':"
             " [y_min, x_min, y_max, x_max],'face': [y_min, x_min,"
             " y_max, x_max],'dangerousObject': [y_min, x_min, y_max,"
-            " x_max]]} in format .json"
+            " x_max] or []]}. If you don't find a dangerous object," 
+            " leave 'dangerousObject' as an empty list ([])." 
+            " The output should be in JSON format."
         ),
     ])
-    # print(response.text)
+    print(response.text)
 
     responseDic = boxesWithLabel(response.text)
 
@@ -151,7 +164,13 @@ def freameProcessing(rawFrame: RawFrame) -> Frame:
         if len(o['dangerousObject']) > 0:
             # print("danger")
             sighting.object_coordinates = getNormalizedCoordinates(img, o['dangerousObject'])
-        sightings.append(faceRekognition(img, sighting))
+
+        sighting = faceRekognition(img, sighting)
+        if sighting.collection_id != Null:
+            sightings.append(sighting)
+    
+    if len(sightings) == 0:
+        return Frame(sightings=sightings)
 
     frame = Frame()
     frame.sightings = sightings
