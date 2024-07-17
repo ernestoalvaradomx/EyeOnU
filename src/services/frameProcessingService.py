@@ -111,7 +111,7 @@ def freameProcessing(rawFrame: RawFrame) -> Frame:
             " The output should be in JSON format."
         ),
     ])
-    print(response.text)
+    # print(response.text)
 
     responseDic = boxesWithLabel(response.text)
 

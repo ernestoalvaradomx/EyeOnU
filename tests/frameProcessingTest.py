@@ -51,7 +51,7 @@ class TestApp(unittest.TestCase):
         img = requests.get(url).content
         data = freameProcessing(RawFrame(pixels=img, creationTime=Null))
 
-        print("len: ", len(data.sightings))
+        # print("len: ", len(data.sightings))
 
         dangerousObject = any(sighting.object_coordinates for sighting in data.sightings if sighting.object_coordinates)
         self.assertEqual(True, dangerousObject)
