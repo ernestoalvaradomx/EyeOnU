@@ -1,17 +1,17 @@
 import json
-from PIL import Image, ImageDraw
 import io
-import os
-import requests
 import hashlib
 import botocore
 
+from PIL import Image
 from sqlalchemy import Null
+
+from src.util.aws import rekognition
+from src.util.gemini import model
+
 from src.models.rawFrameModel import RawFrame
 from src.models.sightingModel import Sighting
 from src.models.frameModel import Frame
-from src.util.aws import rekognition
-from src.util.gemini import model
 
 def boxesWithLabel(text: str) -> dict:
   text = text.split("```\n")[0]

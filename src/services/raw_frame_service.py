@@ -1,9 +1,11 @@
 import cv2
-from src.models.rawFrameModel import RawFrame
 import numpy as np
 import requests
+
 from urllib.request import urlopen
 from urllib.error import URLError
+
+from src.models.rawFrameModel import RawFrame
 
 class RawFrameService:
     def __init__(self):
@@ -13,10 +15,24 @@ class RawFrameService:
             'https://media.glamour.mx/photos/6660c97a58a6da682679023d/16:9/w_2560%2Cc_limit/bad-boys-con-will-smith-fecha-de-estreno.jpg',
             'https://i.ytimg.com/vi/r7jbePATC-U/maxresdefault.jpg'
         ]
-        self.rawFrameList = self.getImageTest()
+        self.rawFrameList = self.getImagesTest()
+
+    def getImagesTest(self) -> list[RawFrame]:
+        rawFrameList = []
+        for url in self.urls:
+            img = requests.get(url).content
+            rawFrameList.append(RawFrame(pixels=img))
+        return rawFrameList
+    
+    def captureFrameTest(self) -> RawFrame:
+        rawFrame = self.rawFrameList[self.imageTestId]
+        self.imageTestId += 1
+        if self.imageTestId >= len(self.urls):
+            self.imageTestId = 0
+        return rawFrame
 
     @staticmethod
-    def capture_frame(id_cam):
+    def capture_frame(id_cam) -> RawFrame:
         if id_cam is None:
             id_cam = 0  # Si id_cam no está definido, se usa la cámara por defecto (índice 0)
 
@@ -42,17 +58,3 @@ class RawFrameService:
         frame_bytes = cv2.imencode('.jpg', frame)[1].tobytes()
         raw_frame = RawFrame(pixels=frame_bytes)
         return raw_frame
-    
-    def getImageTest(self) -> list[RawFrame]:
-        rawFrameList = []
-        for url in self.urls:
-            img = requests.get(url).content
-            rawFrameList.append(RawFrame(pixels=img))
-        return rawFrameList
-    
-    def captureFrameTest(self) -> RawFrame:
-        rawFrame = self.rawFrameList[self.imageTestId]
-        self.imageTestId += 1
-        if self.imageTestId >= len(self.urls):
-            self.imageTestId = 0
-        return rawFrame

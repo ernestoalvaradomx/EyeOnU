@@ -9,4 +9,5 @@ class Individual(db.Model):
     id:Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     collection_id:Mapped[String] = mapped_column(String)
     mugshot:Mapped[LargeBinary] = mapped_column(LargeBinary)
+    
     sightings:Mapped[List["Sighting"]]= relationship(back_populates='individual')

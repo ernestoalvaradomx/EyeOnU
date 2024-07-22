@@ -8,5 +8,6 @@ from typing import List
 class Frame(db.Model):
     id:Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     raw_frame_id:Mapped[int] = mapped_column(Integer, ForeignKey("raw_frame.id"))
-    raw_frame:Mapped["RawFrame"] = relationship( back_populates='frame')
+    
+    raw_frame:Mapped["RawFrame"] = relationship(back_populates='frame')
     sightings:Mapped[List["Sighting"]]= relationship(back_populates='frame')

@@ -6,13 +6,13 @@ from sqlalchemy.orm import Mapped
 
 class Sighting(db.Model):
     id:Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
-    # This doesn't have to be binary, only a representation of the area in which the face of the individual appears within the frame
     frame_id:Mapped[int] = mapped_column(ForeignKey("frame.id"))
     individual_id:Mapped[int] = mapped_column(ForeignKey("individual.id"))
     collection_id:Mapped[String] = mapped_column(String)
     body_coordinates:Mapped[ARRAY] = mapped_column(ARRAY(Integer))
     face_coordinates:Mapped[ARRAY] = mapped_column(ARRAY(Integer))
     object_coordinates:Mapped[ARRAY] = mapped_column(ARRAY(Integer), nullable=True)
+
     frame:Mapped["Frame"]= relationship(back_populates='sightings')
     individual:Mapped["Individual"]= relationship(back_populates='sightings')
     alert:Mapped["Alert"]= relationship(back_populates='sighting')

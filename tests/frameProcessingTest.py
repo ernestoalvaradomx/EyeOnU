@@ -1,14 +1,16 @@
+import unittest
+import requests
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import unittest
-import requests
 from app import app
-from src.services.frameProcessingService import freameProcessing, deleteFace
 from dotenv import load_dotenv
-from src.models.rawFrameModel import RawFrame
 from sqlalchemy import Null
+
+from src.services.frameProcessingService import freameProcessing, deleteFace
+
+from src.models.rawFrameModel import RawFrame
 
 class TestApp(unittest.TestCase):
 
@@ -22,12 +24,6 @@ class TestApp(unittest.TestCase):
 
     def tearDown(self): # Se ejecuta al finalizar cada prueba
         pass  
-        
-    def test_home_200(self):
-        response = self.app.get('/frame-processing/')
-        data = response.get_json()
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['message'], 'Home')
 
     def test_freameProcessing_200(self):
         url = 'https://e00-elmundo.uecdn.es/assets/multimedia/imagenes/2024/04/23/17138798885408.jpg'

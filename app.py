@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from src.services.raw_frame_service import RawFrameService
 from src.services.imageIdentificationDeamon import ImageIdentificationDeamon
-from src.routes.frameProcessingRoute import frameProcessingRoute 
 from src.routes.testORMRoute import testORMRoute
 from src.routes.raw_frame_route import rawFrameRoute
 from src.util.database.db import db
@@ -32,7 +31,6 @@ with app.app_context():
     db.create_all()
 
 # Configiracion de rutas del proyecto
-app.register_blueprint(frameProcessingRoute, url_prefix='/frame-processing')
 app.register_blueprint(testORMRoute, url_prefix='/test-ORM')
 app.register_blueprint(rawFrameRoute, url_prefix='/capture-frame')
 

@@ -1,16 +1,20 @@
 import threading
 import time
 import io
+
 from flask import Flask
+from datetime import datetime
+from PIL import Image
+
+from src.util.database.db import db
+
 from src.services.raw_frame_service import RawFrameService
 from src.services.frameProcessingService import freameProcessing
+
 from src.models.sightingModel import Sighting
 from src.models.individualModel import Individual
 from src.models.rawFrameModel import RawFrame
 from src.models.frameModel import Frame
-from src.util.database.db import db
-from datetime import datetime
-from PIL import Image
 
 class ImageIdentificationDeamon:
     def __init__(self, app: Flask=None, interval: int=60, rawFrameService: RawFrameService=None):
@@ -77,9 +81,4 @@ class ImageIdentificationDeamon:
                                           collection_id=sighting.collection_id, body_coordinates=sighting.body_coordinates, 
                                           face_coordinates=sighting.face_coordinates, object_coordinates=sighting.object_coordinates)
                 db.session.add(sightingCreate)
-            db.session.commit()
-
-
-                
-                
-                
+            db.session.commit()            
