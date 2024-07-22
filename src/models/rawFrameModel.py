@@ -11,9 +11,8 @@ class RawFrame(db.Model):
     creation_time:Mapped[DateTime] =  mapped_column(DateTime(timezone=True), default=func.now())
     frame:Mapped["Frame"] = relationship(back_populates='raw_frame')
 
-    def __init__(self, pixels, creationTime):
+    def __init__(self, pixels):
         self.pixels = pixels
-        self.creationTime = creationTime
 
     def toJson(self):
         return {

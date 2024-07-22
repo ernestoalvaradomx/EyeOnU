@@ -12,13 +12,12 @@ class Sighting(db.Model):
     collection_id:Mapped[String] = mapped_column(String)
     body_coordinates:Mapped[ARRAY] = mapped_column(ARRAY(Integer))
     face_coordinates:Mapped[ARRAY] = mapped_column(ARRAY(Integer))
-    object_coordinates:Mapped[ARRAY] = mapped_column(ARRAY(Integer))
+    object_coordinates:Mapped[ARRAY] = mapped_column(ARRAY(Integer), nullable=True)
     frame:Mapped["Frame"]= relationship(back_populates='sightings')
     individual:Mapped["Individual"]= relationship(back_populates='sightings')
     alert:Mapped["Alert"]= relationship(back_populates='sighting')
 
-    def __init__(self, id, frame_id, individual_id, collection_id, body_coordinates, face_coordinates, object_coordinates):
-        self.id = id
+    def __init__(self, frame_id, individual_id, collection_id, body_coordinates, face_coordinates, object_coordinates):
         self.frame_id = frame_id
         self.individual_id = individual_id
         self.collection_id = collection_id

@@ -1,13 +1,17 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from src.services.raw_frame_service import RawFrameService
+from src.services.imageIdentificationDeamon import ImageIdentificationDeamon
 from src.routes.frameProcessingRoute import frameProcessingRoute 
 from src.routes.testORMRoute import testORMRoute
 from src.routes.raw_frame_route import rawFrameRoute
 from src.util.database.db import db
 from dotenv import load_dotenv
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
 # Carga variables de entorno 
 load_dotenv()
@@ -32,5 +36,9 @@ app.register_blueprint(frameProcessingRoute, url_prefix='/frame-processing')
 app.register_blueprint(testORMRoute, url_prefix='/test-ORM')
 app.register_blueprint(rawFrameRoute, url_prefix='/capture-frame')
 
+# Carga deamon
+ImageIdentificationDeamon(app, 30, RawFrameService()) # Cada 30 segundos se llama
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    # socketio.run(app, debug=True)
+    socketio.run(app)

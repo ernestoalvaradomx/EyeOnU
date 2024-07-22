@@ -14,6 +14,7 @@ pip install flask-migrate
 pip install google-generativeai
 pip install boto3
 pip install python-dotenv
+pip install flask-socketio
 ```
 
 ## Crear tablas
