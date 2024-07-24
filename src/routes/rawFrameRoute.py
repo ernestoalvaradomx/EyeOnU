@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 
-from src.services.raw_frame_service import RawFrameService
+from src.services.rawFrameService import RawFrameService
 
 rawFrameRoute = Blueprint('raw_frame_route', __name__)
 

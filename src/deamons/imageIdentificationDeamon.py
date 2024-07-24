@@ -8,7 +8,7 @@ from PIL import Image
 
 from src.util.database.db import db
 
-from src.services.raw_frame_service import RawFrameService
+from src.services.rawFrameService import RawFrameService
 from src.services.frameProcessingService import freameProcessing
 
 from src.models.sightingModel import Sighting
@@ -17,7 +17,7 @@ from src.models.rawFrameModel import RawFrame
 from src.models.frameModel import Frame
 
 class ImageIdentificationDeamon:
-    def __init__(self, app: Flask=None, interval: int=60, rawFrameService: RawFrameService=None):
+    def __init__(self, interval: int=60, app: Flask=None, rawFrameService=None):
         self.isRunning = True
         self.interval = interval
         self.app = app
@@ -31,7 +31,7 @@ class ImageIdentificationDeamon:
                 print(f"Running createSightings at {datetime.now()}")
                 self.createSightings()
                 time.sleep(self.interval)
-                print(f"Finished createSightings at {datetime.now()}")
+                print(f"Finished createSightings at {datetime.now()}", "\n")
 
     def stop(self):
         self.isRunning = False
@@ -45,10 +45,8 @@ class ImageIdentificationDeamon:
         return imgBytes
 
     def createSightings(self):
-        # rawFrame = self.rawFrameService.capture_frame(0)
-        rawFrame = self.rawFrameService.captureFrameTest() # funcion para prueba
+        rawFrame = self.rawFrameService.captureFrame()
         sightings: list[Sighting] = freameProcessing(rawFrame).sightings
-        # print("Len: ", len(sightings))
 
         if len(sightings) > 0:
             rawFrameCreate = RawFrame(pixels=rawFrame.pixels)
@@ -79,6 +77,8 @@ class ImageIdentificationDeamon:
 
                 sightingCreate = Sighting(frame_id=sighting.frame_id, individual_id=sighting.individual_id, 
                                           collection_id=sighting.collection_id, body_coordinates=sighting.body_coordinates, 
-                                          face_coordinates=sighting.face_coordinates, object_coordinates=sighting.object_coordinates)
+                                          face_coordinates=sighting.face_coordinates, object_coordinates=sighting.object_coordinates,
+                                          is_read=False)
                 db.session.add(sightingCreate)
-            db.session.commit()            
+            db.session.commit() 
+            print("sightings creadas")           

@@ -111,9 +111,10 @@ def freameProcessing(rawFrame: RawFrame) -> Frame:
             " The output should be in JSON format."
         ),
     ])
-    print(response.text)
+    # print(response.text)
 
     responseDic = boxesWithLabel(response.text)
+    print("Data:", responseDic)
 
     sightings = []
     if len(responseDic['people']) <= 0:
@@ -122,7 +123,7 @@ def freameProcessing(rawFrame: RawFrame) -> Frame:
         
     for o in responseDic['people']:
         sighting = Sighting(frame_id=Null, individual_id=Null, collection_id=Null, 
-                            body_coordinates=Null, face_coordinates=Null, object_coordinates=[])
+                            body_coordinates=Null, face_coordinates=Null, object_coordinates=[], is_read=Null)
         sighting.body_coordinates = getNormalizedCoordinates(img, o['person'])
         sighting.face_coordinates = getNormalizedCoordinates(img, o['face'])
         if len(o['dangerousObject']) > 0:
