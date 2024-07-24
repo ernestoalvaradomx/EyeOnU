@@ -14,8 +14,8 @@ from src.util.database.db import db
 
 from tests.rawFrameServiceTest import RawFrameServiceTest
 
+app = Flask(__name__)
 def createApp(testMode=False):
-    app = Flask(__name__)
     socketio = SocketIO(app)
 
     # Carga variables de entorno 
