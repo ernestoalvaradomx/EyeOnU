@@ -15,45 +15,39 @@ from src.util.database.db import db
 from tests.rawFrameServiceTest import RawFrameServiceTest
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
-def createApp(testMode=False):
-    socketio = SocketIO(app)
+# Carga variables de entorno 
+load_dotenv()
 
-    # Carga variables de entorno 
-    load_dotenv()
+# Configurar la conexión a la base de datos
+# Ejemplo de URL de conexion postgresql://tu-usuario:tu-contraseña@tu-direccion-ip-externa:5432/tu-nombre-de-base-de-datos
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/prueba'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://eyeonu_owner:x23OSmoXylkr@ep-quiet-cake-a64j3ysj.us-west-2.aws.neon.tech/eyeonu?sslmode=require'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Configurar la conexión a la base de datos
-    # Ejemplo de URL de conexion postgresql://tu-usuario:tu-contraseña@tu-direccion-ip-externa:5432/tu-nombre-de-base-de-datos
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/prueba'
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://eyeonu_owner:x23OSmoXylkr@ep-quiet-cake-a64j3ysj.us-west-2.aws.neon.tech/eyeonu?sslmode=require'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+migrate = Migrate(app, db)
 
-    db.init_app(app)
-    migrate = Migrate(app, db)
+# Importa los modelos para que SQLAlchemy los registre
+import src.models 
 
-    # Importa los modelos para que SQLAlchemy los registre
-    import src.models 
+with app.app_context():
+    db.create_all()
 
-    with app.app_context():
-        db.create_all()
-
-    # Configiracion de rutas del proyecto
-    app.register_blueprint(testORMRoute, url_prefix='/test-ORM')
-    app.register_blueprint(rawFrameRoute, url_prefix='/capture-frame')
-
-    frameService = RawFrameServiceTest() if testMode else RawFrameService()
-
-    # Carga deamon
-    ImageIdentificationDeamon(30, app, frameService) # Cada 30 segundos se llama
-
-    return app, socketio
+# Configiracion de rutas del proyecto
+app.register_blueprint(testORMRoute, url_prefix='/test-ORM')
+app.register_blueprint(rawFrameRoute, url_prefix='/capture-frame')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run the Flask app')
     parser.add_argument('--test', action='store_true', help='Run in test mode')
     args = parser.parse_args()
 
-    app, socketio = createApp(testMode=args.test)
+    frameService = RawFrameServiceTest() if args.test else RawFrameService()
+
+    # Carga deamon
+    ImageIdentificationDeamon(30, app, frameService) # Cada 30 segundos se llama
 
     # socketio.run(app, debug=True)
     socketio.run(app)
