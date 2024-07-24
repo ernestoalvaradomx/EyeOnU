@@ -26,7 +26,7 @@ class ReincidentAlertDeamon:
                 print(f"Running createSightings at {datetime.now()}")
                 self.sendNotification()
                 time.sleep(self.interval)
-                print(f"Finished createSightings at {datetime.now()}")
+                print(f"Finished createSightings at {datetime.now()}", "\n")
 
     def stop(self):
         self.isRunning = False
