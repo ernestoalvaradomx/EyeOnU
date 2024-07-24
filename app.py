@@ -44,10 +44,8 @@ if __name__ == "__main__":
     parser.add_argument('--test', action='store_true', help='Run in test mode')
     args = parser.parse_args()
 
-    frameService = RawFrameServiceTest() if args.test else RawFrameService()
-
-    # Carga deamon
-    ImageIdentificationDeamon(30, app, frameService) # Cada 30 segundos se llama
+    frameService = RawFrameServiceTest() if args.test else RawFrameService() # Carga servicio segun bandera de test
+    ImageIdentificationDeamon(30, app, frameService) # Carga deamon cada 30 segundos
 
     # socketio.run(app, debug=True)
     socketio.run(app)
