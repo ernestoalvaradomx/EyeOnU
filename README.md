@@ -46,3 +46,27 @@ pip install -r requirements.txt
 ```bash 
 python -m unittest discover -s tests
 ```
+
+## Crear contenedor
+```bash
+docker build -t eyeonu-api .
+```
+
+## Correr contenedor
+```bash
+docker run -p 5000:5000 eyeonu-api
+```
+
+## Correr contenedor en modo prueba
+```bash
+docker run -p 5000:5000 eyeonu-api python app.py --test
+```
+## Crear docker-compose
+```bash
+docker-compose build
+```
+## Correr docker-compose en modo test
+```bash
+docker-compose run api python app.py --test
+```
+

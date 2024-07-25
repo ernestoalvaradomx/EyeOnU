@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from flask_socketio import SocketIO
 
 from src.services.rawFrameService import RawFrameService
+from src.deamons.reincidentAlertDeamon import ReincidentAlertDeamon
 from src.deamons.imageIdentificationDeamon import ImageIdentificationDeamon
 from src.routes.testORMRoute import testORMRoute
 from src.routes.rawFrameRoute import rawFrameRoute
@@ -22,7 +23,7 @@ load_dotenv()
 
 # Configurar la conexión a la base de datos
 # Ejemplo de URL de conexion postgresql://tu-usuario:tu-contraseña@tu-direccion-ip-externa:5432/tu-nombre-de-base-de-datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/prueba'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@dbpostgres:5432/prueba'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://eyeonu_owner:x23OSmoXylkr@ep-quiet-cake-a64j3ysj.us-west-2.aws.neon.tech/eyeonu?sslmode=require'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -45,7 +46,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     frameService = RawFrameServiceTest() if args.test else RawFrameService() # Carga servicio segun bandera de test
-    ImageIdentificationDeamon(30, app, frameService) # Carga deamon cada 30 segundos
+    ImageIdentificationDeamon(interval=30, app=app, rawFrameService=frameService) # Carga deamon cada 30 segundos
+    # ReincidentAlertDeamon(interval=30, app=app, socketio=socketio)
 
     # socketio.run(app, debug=True)
     socketio.run(app)

@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  dbpostgres:
+    image: postgres:15
+    container_name: dbpostgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: prueba
+    ports:
+      - "5432:5432"
+    networks:
+      - develop
+
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: eyeonu-api
+    image: eyeonu-api  # Nombre personalizado para la imagen
+    command: python app.py
+    ports:
+      - "5000:5000"
+    depends_on:
+      - dbpostgres
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@dbpostgres:5432/prueba"
+    networks:
+      - develop
+    env_file:
+      - .env
+  
+networks:
+  develop:

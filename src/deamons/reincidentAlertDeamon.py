@@ -45,7 +45,3 @@ class ReincidentAlertDeamon:
 
                 sighting.is_read = True
                 db.session.commit()
-
-            
-
-
