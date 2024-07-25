@@ -15,6 +15,7 @@ pip install google-generativeai
 pip install boto3
 pip install python-dotenv
 pip install flask-socketio
+pip install flask-cors
 ```
 
 ## Crear tablas

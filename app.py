@@ -14,12 +14,16 @@ from src.routes.rawFrameRoute import rawFrameRoute
 from src.util.database.db import db
 
 from tests.rawFrameServiceTest import RawFrameServiceTest
+from src.util.cors import ConfigCORS
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
 # Carga variables de entorno 
 load_dotenv()
+
+# Carga las cors
+ConfigCORS(app).configCors()
 
 # Configurar la conexión a la base de datos
 # Ejemplo de URL de conexion postgresql://tu-usuario:tu-contraseña@tu-direccion-ip-externa:5432/tu-nombre-de-base-de-datos
