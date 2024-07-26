@@ -1,15 +1,15 @@
-version: '3'
+version: '3.8'
 
 services:
-  dbpostgres:
+  db:
     image: postgres:15
-    container_name: dbpostgres
+    container_name: postgres-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: prueba
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - develop
 
@@ -19,17 +19,28 @@ services:
       dockerfile: Dockerfile
     container_name: eyeonu-api
     image: eyeonu-api  # Nombre personalizado para la imagen
-    command: python app.py
+    command: python app.py --test
     ports:
       - "5000:5000"
     depends_on:
-      - dbpostgres
+      - db
     environment:
-      DATABASE_URL: "postgresql://postgres:postgres@dbpostgres:5432/prueba"
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/prueba"
     networks:
       - develop
     env_file:
       - .env
+
+    # fletApp:
+    #   build: ./myApp
+    #   container_name: eyeonu-app
+    #   image: eyeonu-app  # Nombre personalizado para la imagen
+    #   ports:
+    #     - "3000:3000"
+    #   depends_on:
+    #     - flaskApi
+    #   networks:
+    #     - develop
   
 networks:
   develop:

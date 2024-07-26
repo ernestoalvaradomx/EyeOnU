@@ -16,6 +16,7 @@ pip install boto3
 pip install python-dotenv
 pip install flask-socketio
 pip install flask-cors
+pip install gevent
 ```
 
 ## Crear tablas
@@ -68,6 +69,10 @@ docker-compose build
 ```
 ## Correr docker-compose en modo test
 ```bash
-docker-compose run api python app.py --test
+docker-compose run flaskApi python app.py --test
 ```
 
+## Correr docker-compose 
+```bash
+docker-compose up --build
+```

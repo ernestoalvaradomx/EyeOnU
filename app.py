@@ -1,10 +1,13 @@
 import argparse
+import logging
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from flask_socketio import SocketIO
+from gevent.pywsgi import WSGIServer
+from gevent import monkey
 
 from src.services.rawFrameService import RawFrameService
 from src.deamons.reincidentAlertDeamon import ReincidentAlertDeamon
@@ -17,7 +20,7 @@ from tests.rawFrameServiceTest import RawFrameServiceTest
 from src.util.cors import ConfigCORS
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='gevent')
 
 # Carga variables de entorno 
 load_dotenv()
@@ -25,9 +28,13 @@ load_dotenv()
 # Carga las cors
 ConfigCORS(app).configCors()
 
+# Configuración de logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 # Configurar la conexión a la base de datos
 # Ejemplo de URL de conexion postgresql://tu-usuario:tu-contraseña@tu-direccion-ip-externa:5432/tu-nombre-de-base-de-datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@dbpostgres:5432/prueba'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@db:5432/prueba'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://eyeonu_owner:x23OSmoXylkr@ep-quiet-cake-a64j3ysj.us-west-2.aws.neon.tech/eyeonu?sslmode=require'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -49,9 +56,19 @@ if __name__ == "__main__":
     parser.add_argument('--test', action='store_true', help='Run in test mode')
     args = parser.parse_args()
 
-    frameService = RawFrameServiceTest() if args.test else RawFrameService() # Carga servicio segun bandera de test
+    # Carga servicio segun bandera de test
+    frameService = RawFrameService() 
+    if args.test:
+        frameService = RawFrameServiceTest()
+        logger.info("Test mode")
+    
     ImageIdentificationDeamon(interval=30, app=app, rawFrameService=frameService) # Carga deamon cada 30 segundos
     # ReincidentAlertDeamon(interval=30, app=app, socketio=socketio)
 
     # socketio.run(app, debug=True)
-    socketio.run(app)
+    # socketio.run(app, host='0.0.0.0', port=5000) # Desarrollo
+
+    # Produccion 
+    logger.info("Starting the server on http://127.0.0.1:5000")
+    http_server = WSGIServer(('0.0.0.0', 5000), app)
+    http_server.serve_forever()
