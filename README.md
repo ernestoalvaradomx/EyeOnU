@@ -19,6 +19,10 @@ pip install flask-cors
 pip install gevent
 ```
 
+## Crear base de datos
+`psql -U postgres`
+`create database db owner postgres;`
+
 ## Crear tablas
 ```
 flask db init
@@ -69,7 +73,7 @@ docker-compose build
 ```
 ## Correr docker-compose en modo test
 ```bash
-docker-compose run flaskApi python app.py --test
+docker-compose run api python app.py --test
 ```
 
 ## Correr docker-compose 
