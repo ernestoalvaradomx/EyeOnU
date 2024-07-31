@@ -1,7 +1,7 @@
 import threading
 import time
 
-from flask import Flask
+from flask import Flask, jsonify
 from datetime import datetime
 from flask_socketio import SocketIO
 
@@ -17,31 +17,43 @@ class ReincidentAlertDeamon:
         self.interval = interval
         self.app = app
         self.socketio = socketio
-        self.thread = threading.Thread(target=self.sendNotification(), daemon=True)
+        self.thread = threading.Thread(target=self.run, daemon=True)
         self.thread.start()
 
     def run(self):
         with self.app.app_context():
+            time.sleep(30) # Inicia en 30s
             while self.isRunning:
-                print(f"Running createSightings at {datetime.now()}")
+                print(f"Running sendNotification at {datetime.now()}")
                 self.sendNotification()
                 time.sleep(self.interval)
-                print(f"Finished createSightings at {datetime.now()}", "\n")
+                print(f"Finished sendNotification at {datetime.now()}", "\n")
 
     def stop(self):
         self.isRunning = False
 
     def sendNotification(self):
-        sightingList: list[Sighting] = Sighting.query.filter(is_read=False).all()
+        sightingList: list[Sighting] = Sighting.query.filter_by(is_read=False).all()
         if len(sightingList) > 0:
             for sighting in sightingList:
-                incidentList = Incident.query.join(Alert).join(Sighting).filter(individual_id=sighting.individual_id).all()
-                if len(incidentList) > 0:
-                    alertCreate = Alert(sighting_id=sighting.id) # Crea alerta
+                incidentList: list[Incident] = Incident.query.join(Alert).join(Sighting).filter_by(individual_id=sighting.individual_id).all()
+                if len(incidentList) > 0 or sighting.object_coordinates:
+                    alertCreate = Alert(sighting_id=sighting.id, is_read=False) # Crea alerta
                     db.session.add(alertCreate)
                     db.session.commit()
 
-                    self.socketio.emit('notification', {'': '', 'data': ''}, broadcast=True) # Genera un evento
+                    # alertCreate.sighting = sighting
+
+                    # incidents = []
+                    # for incident in incidentList:
+                    #     incident.alert.sighting.individual = None
+                    #     incidents.append(incident.toJson())
+
+                    # data = {"incidents": incidents, 
+                    #         "alert": alertCreate.toJson()}
+                    # print("data: ", data)
+
+                    self.socketio.emit('notification', {'data': ''}) # Genera un evento
 
                 sighting.is_read = True
-                db.session.commit()
+                db.session.commit() 

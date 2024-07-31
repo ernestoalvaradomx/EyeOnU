@@ -27,6 +27,7 @@ class ImageIdentificationDeamon:
 
     def run(self):
         with self.app.app_context():
+            time.sleep(self.interval) # Inicia en 10s
             while self.isRunning:
                 print(f"Running createSightings at {datetime.now()}")
                 self.createSightings()

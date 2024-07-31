@@ -12,7 +12,7 @@ Para correr el proyecto se podrán utilizar los siguientes comandos:
 
 ```
 flet run -> Inicializa la app de escritorio y web
-fler run --android -> Inicializa la app movil
+flet run --android -> Inicializa la app movil
 ```
 
 Para visualizar la app en un dispositivo android

@@ -12,3 +12,12 @@ class Incident(db.Model):
     
     alert:Mapped["Alert"]= relationship(back_populates='incident')
     user:Mapped["User"]= relationship(back_populates='incidents')
+
+    def toJson(self):
+        return {
+        "id":self.id,
+        "creation_time":self.creation_time.strftime("%Y-%m-%d %H:%M:%S"),
+        "alert_id":self.alert_id,
+        "user_id":self.user_id,
+        "alert":self.alert.toJson() if self.alert else None
+    }

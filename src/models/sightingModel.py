@@ -29,12 +29,13 @@ class Sighting(db.Model):
 
     def toJson(self):
         return {
-        'id':self.id,
-        'frame_id':self.frame_id,
-        'individual_id':self.individual_id,
-        'collection_id':self.collection_id,
-        'body_coordinates':self.body_coordinates,
-        'face_coordinates':self.face_coordinates,
-        'object_coordinates':self.object_coordinates,
-        'is_read':self.is_read
+        "id":self.id,
+        "frame_id":self.frame_id,
+        "individual_id":self.individual_id,
+        "collection_id":self.collection_id,
+        "body_coordinates":self.body_coordinates,
+        "face_coordinates":self.face_coordinates,
+        "object_coordinates":self.object_coordinates,
+        "is_read":self.is_read,
+        "individual":self.individual.toJson() if self.individual else None
     }

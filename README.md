@@ -76,3 +76,8 @@ docker-compose run flaskApi python app.py --test
 ```bash
 docker-compose up --build
 ```
+
+## Bajar contenedores 
+```bash
+docker-compose down -v
+```
