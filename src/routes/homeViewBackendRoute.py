@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint, request,  jsonify
 
+from src.models.incidentModel import Incident
 from src.models.alertModel import Alert
 from src.models.individualModel import Individual
 from src.services.homeViewBackendService import HomeViewBackendService
@@ -21,6 +22,24 @@ class HomeViewBackendRoute():
         def listAlert() -> list[Alert]:
             result = self.homeViewBackendService.findAllAlert()
             return jsonify(result), 200
+        
+        @self.homeViewBackendRoute.route("/incidents", methods=['GET'])
+        def listIncident() -> list[Incident]:
+            if request.is_json:
+                data = request.get_json()
+                result = self.homeViewBackendService.findAllIncidenByIdIndividual(data['idIndividual'])
+                return jsonify(result), 200
+            else:
+                return jsonify({"error": "The request body is not in JSON format"}), 400
+            
+        @self.homeViewBackendRoute.route("/incident", methods=['POST'])
+        def createIncident():
+            if request.is_json:
+                data = request.get_json()
+                self.homeViewBackendService.createIncident(data)
+                return jsonify({"response": True}), 200
+            else:
+                return jsonify({"error": "The request body is not in JSON format"}), 400
     
     def getBlueprint(self):
         return self.homeViewBackendRoute

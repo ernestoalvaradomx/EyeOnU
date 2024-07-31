@@ -6,94 +6,12 @@ import socketio
 sio = socketio.Client()
 sio.connect('http://127.0.0.1:5000')
 
-conn = http.client.HTTPConnection("127.0.0.1:5000")
-
 def main(page: ft.Page):
     page.title = "Routes Example"
 
-    icon = ft.Badge(content=ft.Icon(ft.icons.NOTIFICATIONS, color=ft.colors.WHITE), 
-                    text="0")
-    
-    def listAlert():
-        conn.request("GET", "/home-view/alerts/")
-        response = conn.getresponse()
-
-        if response.status == 200:
-            data = response.read().decode()
-            alerts = json.loads(data)
-            # for individual in individuals:
-            #     print(individual)
-        else:
-            print(response.read().decode())
-            print("Failed to get data from API")
-        return alerts
-
-    @sio.event
-    def connect():
-        print('Conectado al servidor de notificaciones')
-
-    @sio.event
-    def disconnect():
-        print('Desconectado del servidor de notificaciones')
-
-    def closeDialog(page, notification):
-        notification.open = False
-        page.update()
-
-    @sio.event
-    def notification(data):
-        print('\nNotificacion recibida')
-        # Mostrar notificación en Flet
-        # notification = ft.AlertDialog(
-        #     title=ft.Text('Nueva notificación'),
-        #     content=ft.Text(f"Detalles: {data['alert']}"),
-        #     actions=[ft.TextButton("OK", on_click=lambda _: closeDialog(page, notification))],
-        # )
-        # page.overlay.append(notification)
-        # notification.open = True
-        # page.update()
-
-        alerts = listAlert()
-        icon.text = str(len(alerts))
-        icon.update()    
-
-    sujetosIdentificados = [
-        {
-            "id": 1,
-            "hora": '09:39',
-            "imagenURL": "https://s.yimg.com/ny/api/res/1.2/TZlm9wfiZSJ6hAud6pMKJg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MDtoPTQyNw--/https://media.zenfs.com/en/homerun/feed_manager_auto_publish_494/8570a2318fa156e2de6a1d4ca0610d0a"
-        },
-        {
-            "id": 2,
-            "hora": '09:54',
-            "imagenURL": "https://holatelcel.com/wp-content/uploads/2018/11/HEAD-face-recognition.jpg"
-        },
-        {
-            "id": 3,
-            "hora": '10:19',
-            "imagenURL": "https://media.istockphoto.com/id/155068180/es/foto/guy-real.jpg?s=612x612&w=0&k=20&c=VDSua2eTduOoccz7LZZWxNhGMur6hl6jZKIqAiY3w68="
-        },
-        {
-            "id": 4,
-            "hora": '10:39',
-            "imagenURL": "https://img.freepik.com/foto-gratis/concepto-emociones-personas-foto-cabeza-hombre-guapo-aspecto-serio-barba-confiado-decidido_1258-26730.jpg"
-        },
-        {
-            "id": 5,
-            "hora": '11:23',
-            "imagenURL": "https://media.istockphoto.com/id/1081389092/es/foto/hombre-cauc%C3%A1sico-real-con-expresi%C3%B3n-en-blanco.jpg?s=612x612&w=0&k=20&c=JKHYu94Mip2Kxloq-fiPGck7CnlUX9UFftsBwhon-0M="
-        },
-        {
-            "id": 6,
-            "hora": '11:59',
-            "imagenURL": "https://media.istockphoto.com/id/507995592/es/foto/hombre-pensativo-observando-a-la-c%C3%A1mara.jpg?s=612x612&w=0&k=20&c=9roAIpAFmS2yIwR0T96RdfX0C7Dch2CU0HCb4VTD5R4="
-        },
-    ]
-
-    def route_change(route):
-
-        # conn = http.client.HTTPConnection("127.0.0.1:5000")
-        conn.request("GET", "/home-view/individuals/")
+    def listIndividuals():
+        conn = http.client.HTTPConnection("127.0.0.1:5000")
+        conn.request("GET", "/home-view/individuals")
         response = conn.getresponse()
 
         if response.status == 200:
@@ -104,6 +22,43 @@ def main(page: ft.Page):
         else:
             print(response.read().decode())
             print("Failed to get data from API")
+        return individuals
+
+
+    def listAlert():
+        conn = http.client.HTTPConnection("127.0.0.1:5000")
+        conn.request("GET", "/home-view/alerts")
+        response = conn.getresponse()
+
+        if response.status == 200:
+            data = response.read().decode()
+            alerts = json.loads(data)
+        else:
+            print(response.read().decode())
+            print("Failed to get data from API")
+        return alerts
+
+    icon = ft.Badge(content=ft.Icon(ft.icons.NOTIFICATIONS, color=ft.colors.WHITE), 
+                    text=str(len(listAlert())))
+
+    @sio.event
+    def connect():
+        print('Conectado al servidor de notificaciones')
+
+    @sio.event
+    def disconnect():
+        print('Desconectado del servidor de notificaciones')
+
+    @sio.event
+    def notification(data):
+        print('\nNotificacion recibida')
+        alerts = listAlert()
+        icon.text = str(len(alerts))
+        icon.update()    
+
+    individuals = listIndividuals()
+
+    def route_change(route):
 
         def check_item_clicked(e):
             e.control.checked = not e.control.checked
