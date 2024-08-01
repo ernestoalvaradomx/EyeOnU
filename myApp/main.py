@@ -25,6 +25,16 @@ def listAlert():
     conn.request("GET", "/home-view/alerts")
     return getResponse(conn)
 
+def listlistIncident(data):
+    conn = http.client.HTTPConnection(host)
+    conn.request("GET", "/home-view/incidents", body=data)
+    return getResponse(conn)
+
+def createIncident(data):
+    conn = http.client.HTTPConnection(host)
+    conn.request("POST", "/home-view/incident", body=data)
+    return getResponse(conn)
+
 icon = ft.Badge(content=ft.Icon(ft.icons.NOTIFICATIONS, color=ft.colors.WHITE), 
                 text=str(len(listAlert())))
 
