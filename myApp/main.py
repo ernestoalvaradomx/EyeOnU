@@ -3,58 +3,52 @@ import http.client
 import json
 import socketio
 
+host = "127.0.0.1:5000" # direccion del servidor 
+
+def getResponse(conn: http.client.HTTPConnection):
+    response = conn.getresponse()
+    if response.status == 200:
+        data = response.read().decode()
+        jsonData = json.loads(data)
+    else:
+        print(response.read().decode())
+        print("Failed to get data from API")
+    return jsonData
+
+def listIndividuals():
+    conn = http.client.HTTPConnection(host)
+    conn.request("GET", "/home-view/individuals")
+    return getResponse(conn)
+
+def listAlert():
+    conn = http.client.HTTPConnection(host)
+    conn.request("GET", "/home-view/alerts")
+    return getResponse(conn)
+
+icon = ft.Badge(content=ft.Icon(ft.icons.NOTIFICATIONS, color=ft.colors.WHITE), 
+                text=str(len(listAlert())))
+
 sio = socketio.Client()
+
+@sio.event
+def connect():
+    print('Conectado al servidor de notificaciones')
+
+@sio.event
+def disconnect():
+    print('Desconectado del servidor de notificaciones')
+
+@sio.event
+def notification(data):
+    print('\nNotificacion recibida')
+    alerts = listAlert()
+    icon.text = str(len(alerts))
+    icon.update()    
+
 sio.connect('http://127.0.0.1:5000')
 
 def main(page: ft.Page):
     page.title = "Routes Example"
-
-    def listIndividuals():
-        conn = http.client.HTTPConnection("127.0.0.1:5000")
-        conn.request("GET", "/home-view/individuals")
-        response = conn.getresponse()
-
-        if response.status == 200:
-            data = response.read().decode()
-            individuals = json.loads(data)
-            # for individual in individuals:
-            #     print(individual)
-        else:
-            print(response.read().decode())
-            print("Failed to get data from API")
-        return individuals
-
-
-    def listAlert():
-        conn = http.client.HTTPConnection("127.0.0.1:5000")
-        conn.request("GET", "/home-view/alerts")
-        response = conn.getresponse()
-
-        if response.status == 200:
-            data = response.read().decode()
-            alerts = json.loads(data)
-        else:
-            print(response.read().decode())
-            print("Failed to get data from API")
-        return alerts
-
-    icon = ft.Badge(content=ft.Icon(ft.icons.NOTIFICATIONS, color=ft.colors.WHITE), 
-                    text=str(len(listAlert())))
-
-    @sio.event
-    def connect():
-        print('Conectado al servidor de notificaciones')
-
-    @sio.event
-    def disconnect():
-        print('Desconectado del servidor de notificaciones')
-
-    @sio.event
-    def notification(data):
-        print('\nNotificacion recibida')
-        alerts = listAlert()
-        icon.text = str(len(alerts))
-        icon.update()    
 
     individuals = listIndividuals()
 
