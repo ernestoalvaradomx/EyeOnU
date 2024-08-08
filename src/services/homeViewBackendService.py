@@ -9,9 +9,13 @@ class HomeViewBackendService():
     def __init__(self, db:SQLAlchemy):
         self.db = db
 
+    def existsAlertByIndividualId(self, idIndividual):
+        alerts = Alert.query.join(Sighting).filter_by(individual_id=idIndividual).all()
+        return any(alert.is_read == False for alert in alerts)
+
     def findAllIndividual(self) -> list[Individual]:
        response: list[Individual] = Individual.query.all()
-       individualList = [individual.toJson() for individual in response]
+       individualList = [individual.toJson() for individual in response if self.existsAlertByIndividualId(individual.id)]
        return individualList
     
     def findAllAlert(self) -> list[Alert]:
