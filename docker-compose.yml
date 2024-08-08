@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: prueba
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - develop
 
@@ -31,17 +31,17 @@ services:
     env_file:
       - .env
 
-  fletApp:
-    build: ./myApp
-    container_name: eyeonu-app
-    image: eyeonu-app  # Nombre personalizado para la imagen
-    command: flet run --android
-    ports:
-      - "3000:3000"
-    depends_on:
-      - flaskApi
-    networks:
-      - develop
+  # fletApp:
+  #   build: ./myApp
+  #   container_name: eyeonu-app
+  #   image: eyeonu-app  # Nombre personalizado para la imagen
+  #   command: flet run --android
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - flaskApi
+  #   networks:
+  #     - develop
   
 networks:
   develop:
