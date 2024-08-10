@@ -19,11 +19,12 @@ services:
       dockerfile: Dockerfile
     container_name: eyeonu-api
     image: eyeonu-api  # Nombre personalizado para la imagen
-    command: python app.py --test --ii
+    command: python app.py --demo --ii
     ports:
       - "5000:5000"
     depends_on:
       - db
+      - demo_video_feed
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/prueba"
     networks:

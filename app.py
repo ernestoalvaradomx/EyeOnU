@@ -74,7 +74,7 @@ if __name__ == "__main__":
     frameService = RawFrameService() 
     video_feed_url=None
     if args.test:
-        frameService = RawFrameServiceTest()
+        frameService = RawFrameServiceMock()
         logger.info("Test mode")
 
         with app.app_context(): # Crea un usuario de prueba
