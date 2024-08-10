@@ -25,7 +25,7 @@ def listAlert():
     conn.request("GET", "/home-view/alerts")
     return getResponse(conn)
 
-def listlistIncident(data):
+def listIncident(data):
     conn = http.client.HTTPConnection(host)
     conn.request("GET", "/home-view/incidents", body=data)
     return getResponse(conn)
