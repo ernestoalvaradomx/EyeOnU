@@ -24,9 +24,9 @@ class HomeViewBackendRoute():
             result = self.homeViewBackendService.findAllAlert()
             return jsonify(result), 200
         
-        @self.homeViewBackendRoute.route("/sighting", methods=['GET'])
+        @self.homeViewBackendRoute.route("/sightings", methods=['GET'])
         def listSighting() -> list[Sighting]:
-            result = self.homeViewBackendService.findAllAlert()
+            result = self.homeViewBackendService.findAllSighting()
             return jsonify(result), 200
         
         @self.homeViewBackendRoute.route("/incidents", methods=['GET'])
