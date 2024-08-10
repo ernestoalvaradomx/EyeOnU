@@ -1,6 +1,6 @@
 from sqlalchemy.sql import func
 from src.util.database.db import db
-from sqlalchemy import ARRAY, ForeignKey, Integer, LargeBinary, String, Boolean
+from sqlalchemy import ARRAY, DateTime, ForeignKey, Integer, LargeBinary, String, Boolean
 from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.orm import Mapped
 
@@ -13,6 +13,7 @@ class Sighting(db.Model):
     face_coordinates:Mapped[ARRAY] = mapped_column(ARRAY(Integer))
     object_coordinates:Mapped[ARRAY] = mapped_column(ARRAY(Integer))
     is_read:Mapped[Boolean] = mapped_column(Boolean)
+    creation_time:Mapped[DateTime] =  mapped_column(DateTime(timezone=True), default=func.now())
 
     frame:Mapped["Frame"]= relationship(back_populates='sightings')
     individual:Mapped["Individual"]= relationship(back_populates='sightings')
@@ -37,5 +38,6 @@ class Sighting(db.Model):
         "face_coordinates":self.face_coordinates,
         "object_coordinates":self.object_coordinates,
         "is_read":self.is_read,
-        "individual":self.individual.toJson() if self.individual else None
+        "individual":self.individual.toJson() if self.individual else None,
+        "creation_time":self.creation_time.strftime("%Y-%m-%d %H:%M:%S")
     }
