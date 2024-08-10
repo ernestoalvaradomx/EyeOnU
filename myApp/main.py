@@ -51,23 +51,25 @@ def connect():
 
 @sio.event
 def disconnect():
-    print('Desconectado del servidor de notificaciones')
-
-@sio.event
-def notification(data):
-    print('\nNotificacion recibida')
-    alerts = listAlert()
-    icon.text = str(len(alerts))
-    icon.update()    
+    print('Desconectado del servidor de notificaciones') 
 
 sio.connect('http://127.0.0.1:5000')
 
 def main(page: ft.Page):
     page.title = "Routes Example"
 
-    individuals = listIndividuals()
+    @sio.event
+    def notification(data):
+        print('\nNotificacion recibida')
+        alerts = listAlert()
+        icon.text = str(len(alerts))
+        page.add(icon)
+        icon.update()  
+        page.update() 
 
     def route_change(route):
+
+        individuals = listIndividuals()
 
         def check_item_clicked(e):
             e.control.checked = not e.control.checked
