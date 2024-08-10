@@ -95,6 +95,11 @@ docker compose down --remove-orphans
 docker compose up --remove-orphans demo_video_feed
 ```
 
+### Visualizar el stream
+
+```bash
+ffplay -rtsp_transport tcp rtsp://localhost:8554/live.stream
+```
 
 ### Testear que funciona good
 

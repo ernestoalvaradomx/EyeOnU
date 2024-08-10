@@ -13,6 +13,7 @@ def getResponse(conn: http.client.HTTPConnection):
     else:
         print(response.read().decode())
         print("Failed to get data from API")
+        jsonData = {"error": "Failed to get data from API"}
     return jsonData
 
 def listIndividuals():
