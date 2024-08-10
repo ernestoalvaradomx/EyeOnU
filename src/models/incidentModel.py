@@ -17,7 +17,7 @@ class Incident(db.Model):
     def toJson(self):
         return {
         "id":self.id,
-        "creation_time":self.creation_time.strftime("%Y-%m-%d %H:%M:%S"),
+        "creation_time":self.creation_time.strftime("%H:%M"),
         "alert_id":self.alert_id,
         "user_id":self.user_id,
         "description":self.description,
