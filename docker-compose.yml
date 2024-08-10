@@ -50,15 +50,19 @@ services:
       - "8554:8554"
     volumes:
       - ${PWD}/test_stream/rtsp-simple-server.yml:/rtsp-simple-server.yml
+    networks:
+      - develop
 
   demo_video_feed:
     image: linuxserver/ffmpeg
     container_name: demo-video-feed
-    command: -re -stream_loop -1 -i test_stream/video_feed.mp4 -c:v h264 -f rtsp -rtsp_transport tcp rtsp://localhost:8554/live.stream
+    command: -re -stream_loop -1 -i test_stream/video_feed.mp4 -c:v h264 -f rtsp -rtsp_transport tcp rtsp://demo-rtsp-server:8554/live.stream
     volumes:
       - ${PWD}/test_stream:/test_stream
-    extra_hosts:
-      - "localhost:10.0.0.30"
+    networks:
+      - develop
+    depends_on:
+      - demo_rtsp_server 
 
 
 networks:

@@ -50,7 +50,7 @@ pip install -r requirements.txt
 
 ## Correr pruebas unitarias: 
 ```bash 
-python -m unittest discover -s tests
+python -m unittest discover -s tests -v
 ```
 
 ## Crear contenedor
@@ -73,7 +73,7 @@ docker-compose build
 ```
 ## Correr docker-compose en modo test
 ```bash
-docker-compose run api python app.py --test
+docker-compose run flaskApi python app.py --test
 ```
 
 ## Correr docker-compose 
@@ -85,3 +85,22 @@ docker-compose up --build
 ```bash
 docker-compose down -v
 ```
+
+## Probar servidor de stream para demo:
+
+### [Levantar](https://stackoverflow.com/questions/26999595/what-steps-are-needed-to-stream-rtsp-from-ffmpeg) contenedores
+
+```bash
+docker compose down --remove-orphans
+docker compose up --remove-orphans demo_video_feed
+```
+
+
+### Testear que funciona good
+
+```bash
+PYTHONPATH=. python3 src/prueba_frames/frame.py
+```
+Debe salir una ventana con un still del video:
+
+![Sample still](test_stream/sample_still.png "Prueba exitosa")
