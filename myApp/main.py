@@ -58,18 +58,23 @@ sio.connect('http://127.0.0.1:5000')
 def main(page: ft.Page):
     page.title = "Routes Example"
 
-    @sio.event
-    def notification(data):
-        print('\nNotificacion recibida')
-        alerts = listAlert()
-        icon.text = str(len(alerts))
-        page.add(icon)
-        icon.update()  
+    # @sio.event
+    # def notification(data):
+    #     print('\nNotificacion recibida')
+    #     alerts = listAlert()
+    #     icon.text = str(len(alerts))
+
+    #     # Verifica si el control está en la página
+    #     if icon not in page.controls:
+    #         page.add(icon)  # Agrega el control si no está en la página
+    #         page.update()
+
+    #     icon.update()  
+
+    def route_change(route): 
+
+        sightings = listSighting()
         page.update() 
-
-    def route_change(route):
-
-        individuals = listIndividuals()
 
         def check_item_clicked(e):
             e.control.checked = not e.control.checked
@@ -80,8 +85,9 @@ def main(page: ft.Page):
 
         page.views.clear()
         list_view_content = []
-        for sujeto in individuals:
-            image = sujeto['mugshot']
+        for sighting in sightings:
+            sujeto = sighting['individual']
+            image = sighting['mugshot']
             # print("image: ", image)
 
             list_view_content.append(
@@ -103,8 +109,8 @@ def main(page: ft.Page):
                             ft.Container(
                                 content=ft.Column(
                                     controls=[
-                                        ft.Text(f"ID: {sujeto['id']}", size=20, color="#000000", weight=ft.FontWeight.BOLD),
-                                        ft.Text(f"Date: {sujeto['creation_time']}", size=20, color="#000000", weight=ft.FontWeight.BOLD)
+                                        ft.Text(f"ID: {sighting['id']}", size=20, color="#000000", weight=ft.FontWeight.BOLD),
+                                        ft.Text(f"Date: {sighting['creation_time']}", size=20, color="#000000", weight=ft.FontWeight.BOLD)
                                     ],
                                     alignment=ft.MainAxisAlignment.CENTER,
                                     horizontal_alignment=ft.CrossAxisAlignment.START,
@@ -120,7 +126,7 @@ def main(page: ft.Page):
                                         ft.IconButton(
                                             ft.icons.ADD_BOX, 
                                             icon_color=ft.colors.GREEN_200,
-                                            on_click=lambda e, id=sujeto['id'], hora=sujeto['creation_time'], imagenURL=image: go_to_store(e, id, hora, imagenURL)
+                                            on_click=lambda e, id=sighting['id'], hora=sighting['creation_time'], imagenURL=image: go_to_store(e, id, hora, imagenURL)
                                         ),
                                     ]
                                 ),
