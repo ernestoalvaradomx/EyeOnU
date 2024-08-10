@@ -2,7 +2,7 @@ import requests
 
 from src.models.rawFrameModel import RawFrame
 
-class RawFrameServiceTest:
+class RawFrameServiceMock:
     def __init__(self):
         self.imageTestId = 0
         self.urls = [

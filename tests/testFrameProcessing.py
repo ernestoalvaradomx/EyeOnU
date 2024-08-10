@@ -12,7 +12,7 @@ from src.services.frameProcessingService import freameProcessing, deleteFace
 
 from src.models.rawFrameModel import RawFrame
 
-class TestApp(unittest.TestCase):
+class TestFrameProcessing(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):

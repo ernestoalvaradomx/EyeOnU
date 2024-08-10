@@ -6,7 +6,7 @@ import unittest
 from app import app
 from unittest.mock import patch
 
-class TestApp(unittest.TestCase):
+class TestHomeViewBackend(unittest.TestCase):
 
     def setUp(self): # Se ejecuta al iniciar cada prueba
         app.config['TESTING'] = True

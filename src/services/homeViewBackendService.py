@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 
+from src.models.userModel import User
 from src.models.incidentModel import Incident
 from src.models.sightingModel import Sighting
 from src.models.alertModel import Alert
@@ -9,6 +10,7 @@ class HomeViewBackendService():
     def __init__(self, db:SQLAlchemy):
         self.db = db
 
+    # TODO: Borrar 
     def existsAlertByIndividualId(self, idIndividual):
         alerts = Alert.query.join(Sighting).filter_by(individual_id=idIndividual).all()
         return any(alert.is_read == False for alert in alerts)
@@ -17,6 +19,7 @@ class HomeViewBackendService():
         alerts = Alert.query.filter_by(sighting_id=idSighting).all()
         return len(alerts) == 0
 
+    # TODO: Borrar
     def findAllIndividual(self) -> list[Individual]:
        response: list[Individual] = Individual.query.all()
        individualList = [individual.toJson() for individual in response if self.existsAlertByIndividualId(individual.id)]
@@ -56,6 +59,17 @@ class HomeViewBackendService():
         newAlert = Incident(alert_id=alertId, user_id=data["idUser"], description=data["description"])
         self.db.session.add(newAlert)
         self.db.session.commit()
+
+    def countUsers(self):
+        response: list[User] = User.query.all()
+        return len(response)
+
+    def createUser(self):
+        newUser = User()
+        self.db.session.add(newUser)
+        self.db.session.commit()
+        return newUser.id != None
+
 
 
 
