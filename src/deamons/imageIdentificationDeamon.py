@@ -32,7 +32,7 @@ class ImageIdentificationDeamon:
                 print(f"Running createSightings at {datetime.now()}")
                 self.createSightings()
                 time.sleep(self.interval)
-                print(f"Finished createSightings at {datetime.now()}", "\n")
+                # print(f"Finished createSightings at {datetime.now()}", "\n")
 
     def stop(self):
         self.isRunning = False
@@ -79,7 +79,7 @@ class ImageIdentificationDeamon:
                 sightingCreate = Sighting(frame_id=sighting.frame_id, individual_id=sighting.individual_id, 
                                           collection_id=sighting.collection_id, body_coordinates=sighting.body_coordinates, 
                                           face_coordinates=sighting.face_coordinates, object_coordinates=sighting.object_coordinates,
-                                          is_read=False)
+                                          is_read=False, mugshot=self.getMugShot(rawFrame.pixels, sighting))
                 db.session.add(sightingCreate)
             db.session.commit() 
             print("sightings creadas")           

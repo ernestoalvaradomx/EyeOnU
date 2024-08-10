@@ -16,8 +16,8 @@ class HomeViewBackendService():
         return any(alert.is_read == False for alert in alerts)
     
     def existsAlertByIdSighting(self, idSighting):
-        alerts = Alert.query.filter_by(sighting_id=idSighting).all()
-        return len(alerts) == 0
+        alert = Alert.query.filter_by(sighting_id=idSighting).first()
+        return alert is not None
 
     # TODO: Borrar
     def findAllIndividual(self) -> list[Individual]:
@@ -32,7 +32,7 @@ class HomeViewBackendService():
     
     def findAllSighting(self):
         response: list[Sighting] = Sighting.query.all()
-        sightingList = [sighting.toJson() for sighting in response if self.existsAlertByIdSighting(sighting.id)]
+        sightingList = [sighting.toJson() for sighting in response if not self.existsAlertByIdSighting(sighting.id)]
         return sightingList
     
     def findAllIncidenByIdIndividual(self, idIndividual) -> list[Incident]:

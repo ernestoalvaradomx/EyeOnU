@@ -80,7 +80,7 @@ def faceRekognition(img: Image, sighting: Sighting) -> Sighting:
         )
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == 'InvalidParameterException' and 'no faces in the image' in e.response['Error']['Message']:
-            # print("no se encontraron caras en la imagen")
+            print("no se encontraron caras en la imagen")
             return sighting
         
     if response['FaceMatches']:
@@ -114,7 +114,7 @@ def freameProcessing(rawFrame: RawFrame) -> Frame:
     # print(response.text)
 
     responseDic = boxesWithLabel(response.text)
-    print("Data:", responseDic)
+    # print("Data:", responseDic)
 
     sightings = []
     if len(responseDic['people']) <= 0:
@@ -123,14 +123,17 @@ def freameProcessing(rawFrame: RawFrame) -> Frame:
         
     for o in responseDic['people']:
         sighting = Sighting(frame_id=Null, individual_id=Null, collection_id=Null, 
-                            body_coordinates=Null, face_coordinates=Null, object_coordinates=[], is_read=Null)
+                            body_coordinates=Null, face_coordinates=Null, object_coordinates=[], is_read=Null, mugshot=Null)
         sighting.body_coordinates = getNormalizedCoordinates(img, o['person'])
-        sighting.face_coordinates = getNormalizedCoordinates(img, o['face'])
+
+        if len(o['face']) > 0: # Si encuentra un rostro hace el faceRekognition
+            sighting.face_coordinates = getNormalizedCoordinates(img, o['face'])
+            sighting = faceRekognition(img, sighting)
+
         if len(o['dangerousObject']) > 0:
             # print("danger")
             sighting.object_coordinates = getNormalizedCoordinates(img, o['dangerousObject'])
 
-        sighting = faceRekognition(img, sighting)
         if sighting.collection_id != Null:
             sightings.append(sighting)
     

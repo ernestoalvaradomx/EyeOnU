@@ -79,9 +79,9 @@ if __name__ == "__main__":
                 logger.info("User test create: " + str(response))
     
     if args.ii:
-        ImageIdentificationDeamon(interval=60, app=app, rawFrameService=frameService) # Carga deamon cada 30 segundos
+        ImageIdentificationDeamon(interval=30, app=app, rawFrameService=frameService) # Carga deamon cada 30 segundos
         logger.info("Active ImageIdentificationDeamon")
-    ReincidentAlertDeamon(interval=30, app=app, socketio=socketio)
+    ReincidentAlertDeamon(interval=10, app=app, socketio=socketio)
 
     # socketio.run(app, debug=True)
     # socketio.run(app, host='0.0.0.0', port=5000) # Desarrollo
