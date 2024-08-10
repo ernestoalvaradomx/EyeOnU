@@ -21,8 +21,10 @@ from src.routes.rawFrameRoute import rawFrameRoute
 
 from src.util.database.db import db
 
-from tests.rawFrameServiceTest import RawFrameServiceTest
+from tests.RawFrameServiceMock import RawFrameServiceMock
 from src.util.cors import ConfigCORS
+
+DEMO_STREAM="rtsp://demo-rtsp-server:8554/live.stream"
 
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode='gevent')
@@ -64,13 +66,15 @@ app.register_blueprint(homeViewBackendRoute.getBlueprint(), url_prefix='/home-vi
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run the Flask app')
     parser.add_argument('--test', action='store_true', help='Run in test mode')
+    parser.add_argument('--demo', action='store_true', help='Run in demo mode')
     parser.add_argument('--ii', action='store_true', help='Run ImageIdentificationDeamon')
     args = parser.parse_args()
 
     # Carga servicio segun bandera de test
     frameService = RawFrameService() 
+    video_feed_url=None
     if args.test:
-        frameService = RawFrameServiceTest()
+        frameService = RawFrameServiceMock()
         logger.info("Test mode")
 
         with app.app_context(): # Crea un usuario de prueba
@@ -78,8 +82,12 @@ if __name__ == "__main__":
                 response = homeViewBackendService.createUser() 
                 logger.info("User test create: " + str(response))
     
+    if args.demo:
+        logger.info("Running demo mode")
+        video_feed_url=DEMO_STREAM
+        
     if args.ii:
-        ImageIdentificationDeamon(interval=30, app=app, rawFrameService=frameService) # Carga deamon cada 30 segundos
+        ImageIdentificationDeamon(interval=30, app=app, rawFrameService=frameService, video_feed_url=video_feed_url) # Carga deamon cada 30 segundos
         logger.info("Active ImageIdentificationDeamon")
     ReincidentAlertDeamon(interval=10, app=app, socketio=socketio)
 

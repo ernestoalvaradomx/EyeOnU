@@ -17,11 +17,12 @@ from src.models.rawFrameModel import RawFrame
 from src.models.frameModel import Frame
 
 class ImageIdentificationDeamon:
-    def __init__(self, interval: int=60, app: Flask=None, rawFrameService=None):
+    def __init__(self, interval: int=60, app: Flask=None, rawFrameService=None, video_feed_url=None):
         self.isRunning = True
         self.interval = interval
         self.app = app
         self.rawFrameService = rawFrameService
+        self.video_feed_url=video_feed_url
         self.thread = threading.Thread(target=self.run, daemon=True)
         self.thread.start()
 
@@ -46,7 +47,7 @@ class ImageIdentificationDeamon:
         return imgBytes
 
     def createSightings(self):
-        rawFrame = self.rawFrameService.captureFrame()
+        rawFrame = self.rawFrameService.captureFrame(self.video_feed_url)
         sightings: list[Sighting] = freameProcessing(rawFrame).sightings
 
         if len(sightings) > 0:
