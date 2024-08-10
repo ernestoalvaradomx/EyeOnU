@@ -16,7 +16,7 @@ class Alert(db.Model):
     def toJson(self):
         return {
         "id":self.id,
-        "creation_time":self.creation_time.strftime("%Y-%m-%d %H:%M:%S"),
+        "creation_time":self.creation_time.strftime("%H:%M"),
         "sighting_id":self.sighting_id,
         "is_read":self.is_read,
         "sighting":self.sighting.toJson() if self.sighting else None

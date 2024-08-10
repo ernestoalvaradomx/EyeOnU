@@ -35,7 +35,7 @@ def createIncident(data):
     conn.request("POST", "/home-view/incident", body=data)
     return getResponse(conn)
 
-def listIncident(data):
+def listSighting():
     conn = http.client.HTTPConnection(host)
     conn.request("GET", "/home-view/sightings")
     return getResponse(conn)

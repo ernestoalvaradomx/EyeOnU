@@ -39,5 +39,5 @@ class Sighting(db.Model):
         "object_coordinates":self.object_coordinates,
         "is_read":self.is_read,
         "individual":self.individual.toJson() if self.individual else None,
-        "creation_time":self.creation_time.strftime("%Y-%m-%d %H:%M:%S")
+        "creation_time":self.creation_time.strftime("%H:%M"),
     }
