@@ -12,6 +12,7 @@ class Individual(db.Model):
     collection_id:Mapped[String] = mapped_column(String)
     creation_time:Mapped[DateTime] =  mapped_column(DateTime(timezone=True), default=func.now())
     mugshot:Mapped[LargeBinary] = mapped_column(LargeBinary)
+    creation_time:Mapped[DateTime] =  mapped_column(DateTime(timezone=True), default=func.now())
     
     sightings:Mapped[List["Sighting"]]= relationship(back_populates='individual')
 
@@ -20,5 +21,6 @@ class Individual(db.Model):
         "id":self.id,
         "collection_id":self.collection_id,
         "creation_time":self.creation_time.strftime("%H:%M"),
-        "mugshot":base64.b64encode(self.mugshot).decode('utf-8') # Regresar en base 64
+        "mugshot":base64.b64encode(self.mugshot).decode('utf-8'), # Regresar en base 64
+        "creation_time":self.creation_time.strftime("%Y-%m-%d %H:%M:%S")
     }

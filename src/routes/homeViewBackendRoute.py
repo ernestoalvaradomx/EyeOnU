@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint, request,  jsonify
 
+from src.models.sightingModel import Sighting
 from src.models.incidentModel import Incident
 from src.models.alertModel import Alert
 from src.models.individualModel import Individual
@@ -21,6 +22,11 @@ class HomeViewBackendRoute():
         @self.homeViewBackendRoute.route("/alerts", methods=['GET'])
         def listAlert() -> list[Alert]:
             result = self.homeViewBackendService.findAllAlert()
+            return jsonify(result), 200
+        
+        @self.homeViewBackendRoute.route("/sightings", methods=['GET'])
+        def listSighting() -> list[Sighting]:
+            result = self.homeViewBackendService.findAllSighting()
             return jsonify(result), 200
         
         @self.homeViewBackendRoute.route("/incidents", methods=['GET'])

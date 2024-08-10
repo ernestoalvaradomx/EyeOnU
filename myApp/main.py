@@ -35,6 +35,11 @@ def createIncident(data):
     conn.request("POST", "/home-view/incident", body=data)
     return getResponse(conn)
 
+def listIncident(data):
+    conn = http.client.HTTPConnection(host)
+    conn.request("GET", "/home-view/sightings", body=data)
+    return getResponse(conn)
+
 icon = ft.Badge(content=ft.Icon(ft.icons.NOTIFICATIONS, color=ft.colors.WHITE), 
                 text=str(len(listAlert())))
 
