@@ -37,7 +37,7 @@ def createIncident(data):
 
 def listIncident(data):
     conn = http.client.HTTPConnection(host)
-    conn.request("GET", "/home-view/sightings", body=data)
+    conn.request("GET", "/home-view/sightings")
     return getResponse(conn)
 
 icon = ft.Badge(content=ft.Icon(ft.icons.NOTIFICATIONS, color=ft.colors.WHITE), 
