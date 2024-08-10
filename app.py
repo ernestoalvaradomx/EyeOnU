@@ -89,7 +89,7 @@ if __name__ == "__main__":
     if args.ii:
         ImageIdentificationDeamon(interval=30, app=app, rawFrameService=frameService, video_feed_url=video_feed_url) # Carga deamon cada 30 segundos
         logger.info("Active ImageIdentificationDeamon")
-    ReincidentAlertDeamon(interval=10, app=app, socketio=socketio)
+    ReincidentAlertDeamon(interval=5, app=app, socketio=socketio)
 
     # socketio.run(app, debug=True)
     # socketio.run(app, host='0.0.0.0', port=5000) # Desarrollo

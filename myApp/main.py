@@ -73,8 +73,7 @@ def main(page: ft.Page):
 
     def route_change(route): 
 
-        sightings = listSighting()
-        page.update() 
+        sightings = listSighting() 
 
         def check_item_clicked(e):
             e.control.checked = not e.control.checked
