@@ -80,7 +80,7 @@ def faceRekognition(img: Image, sighting: Sighting) -> Sighting:
         )
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == 'InvalidParameterException' and 'no faces in the image' in e.response['Error']['Message']:
-            print("no se encontraron caras en la imagen")
+            print("no se reconocio cara: ", sighting.face_coordinates)
             return sighting
         
     if response['FaceMatches']:
@@ -114,7 +114,7 @@ def freameProcessing(rawFrame: RawFrame) -> Frame:
     # print(response.text)
 
     responseDic = boxesWithLabel(response.text)
-    # print("Data:", responseDic)
+    print("Data:", responseDic)
 
     sightings = []
     if len(responseDic['people']) <= 0:
@@ -135,6 +135,7 @@ def freameProcessing(rawFrame: RawFrame) -> Frame:
             sighting.object_coordinates = getNormalizedCoordinates(img, o['dangerousObject'])
 
         if sighting.collection_id != Null:
+            print("se reconocio cara: ", sighting.face_coordinates)
             sightings.append(sighting)
     
     if len(sightings) == 0:

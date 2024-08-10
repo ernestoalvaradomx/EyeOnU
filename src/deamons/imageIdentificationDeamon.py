@@ -67,7 +67,7 @@ class ImageIdentificationDeamon:
                 individual = Individual.query.filter_by(collection_id=sighting.collection_id).first()
                 if individual:
                     sighting.individual_id = individual.id
-                    # print("individual_id existe")
+                    print("individual_id existe")
                 else:
                     individualCreate = Individual(collection_id=sighting.collection_id, 
                                                   mugshot=self.getMugShot(rawFrame.pixels, sighting))
