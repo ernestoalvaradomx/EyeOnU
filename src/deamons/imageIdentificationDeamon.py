@@ -17,11 +17,12 @@ from src.models.rawFrameModel import RawFrame
 from src.models.frameModel import Frame
 
 class ImageIdentificationDeamon:
-    def __init__(self, interval: int=60, app: Flask=None, rawFrameService=None):
+    def __init__(self, interval: int=60, app: Flask=None, rawFrameService=None, video_feed_url=None):
         self.isRunning = True
         self.interval = interval
         self.app = app
         self.rawFrameService = rawFrameService
+        self.video_feed_url=video_feed_url
         self.thread = threading.Thread(target=self.run, daemon=True)
         self.thread.start()
 
@@ -32,7 +33,7 @@ class ImageIdentificationDeamon:
                 print(f"Running createSightings at {datetime.now()}")
                 self.createSightings()
                 time.sleep(self.interval)
-                print(f"Finished createSightings at {datetime.now()}", "\n")
+                # print(f"Finished createSightings at {datetime.now()}", "\n")
 
     def stop(self):
         self.isRunning = False
@@ -46,7 +47,7 @@ class ImageIdentificationDeamon:
         return imgBytes
 
     def createSightings(self):
-        rawFrame = self.rawFrameService.captureFrame()
+        rawFrame = self.rawFrameService.captureFrame(self.video_feed_url)
         sightings: list[Sighting] = freameProcessing(rawFrame).sightings
 
         if len(sightings) > 0:
@@ -66,7 +67,7 @@ class ImageIdentificationDeamon:
                 individual = Individual.query.filter_by(collection_id=sighting.collection_id).first()
                 if individual:
                     sighting.individual_id = individual.id
-                    # print("individual_id existe")
+                    print("individual_id existe")
                 else:
                     individualCreate = Individual(collection_id=sighting.collection_id, 
                                                   mugshot=self.getMugShot(rawFrame.pixels, sighting))
@@ -79,7 +80,7 @@ class ImageIdentificationDeamon:
                 sightingCreate = Sighting(frame_id=sighting.frame_id, individual_id=sighting.individual_id, 
                                           collection_id=sighting.collection_id, body_coordinates=sighting.body_coordinates, 
                                           face_coordinates=sighting.face_coordinates, object_coordinates=sighting.object_coordinates,
-                                          is_read=False)
+                                          is_read=False, mugshot=self.getMugShot(rawFrame.pixels, sighting))
                 db.session.add(sightingCreate)
             db.session.commit() 
             print("sightings creadas")           

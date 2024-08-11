@@ -1,7 +1,7 @@
 .env
 venv/
 eyeonu/
-captured_frame.jpg
+**/captured_frame.jpg
 __pycache__
 bin/
 **/*.pyc

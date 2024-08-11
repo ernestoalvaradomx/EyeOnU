@@ -19,11 +19,12 @@ services:
       dockerfile: Dockerfile
     container_name: eyeonu-api
     image: eyeonu-api  # Nombre personalizado para la imagen
-    command: python app.py --test
+    command: python app.py --demo --ii
     ports:
       - "5000:5000"
     depends_on:
       - db
+      - demo_video_feed
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/prueba"
     networks:
@@ -43,5 +44,26 @@ services:
   #   networks:
   #     - develop
   
+  demo_rtsp_server:
+    image: bluenviron/mediamtx:latest-ffmpeg 
+    container_name: demo-rtsp-server
+    ports:
+      - "8554:8554"
+    volumes:
+      - ./test_stream/rtsp-simple-server.yml:/rtsp-simple-server.yml
+    networks:
+      - develop
+
+  demo_video_feed:
+    image: linuxserver/ffmpeg
+    container_name: demo-video-feed
+    command: -re -stream_loop -1 -i /test_stream/video_feed.mp4 -c:v h264 -f rtsp -rtsp_transport tcp rtsp://demo-rtsp-server:8554/live.stream
+    volumes:
+      - ./test_stream:/test_stream
+    networks:
+      - develop
+    depends_on:
+      - demo_rtsp_server 
+
 networks:
   develop:

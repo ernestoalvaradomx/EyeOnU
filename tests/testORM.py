@@ -7,7 +7,7 @@ from app import app
 from unittest.mock import patch
 from src.models.userTestModel import UserTest
 
-class TestApp(unittest.TestCase):
+class TestORM(unittest.TestCase):
 
     def setUp(self): # Se ejecuta al iniciar cada prueba
         app.config['TESTING'] = True
@@ -28,7 +28,7 @@ class TestApp(unittest.TestCase):
 
     def test_getUser_200(self):
         response = self.app.get('/test-ORM/users/1')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
     @patch('app.db.session.add')
     @patch('app.db.session.commit')
@@ -49,6 +49,7 @@ class TestApp(unittest.TestCase):
                        age=23)
         response = self.app.put('/test-ORM/users/1', json=updateUser.toJson())
         data = response.get_json()
+        print(data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['message'], f"User {updateUser.name} has been updated successfully.")
 

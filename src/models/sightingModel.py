@@ -1,3 +1,4 @@
+import base64
 from sqlalchemy.sql import func
 from src.util.database.db import db
 from sqlalchemy import ARRAY, DateTime, ForeignKey, Integer, LargeBinary, String, Boolean
@@ -13,13 +14,14 @@ class Sighting(db.Model):
     face_coordinates:Mapped[ARRAY] = mapped_column(ARRAY(Integer))
     object_coordinates:Mapped[ARRAY] = mapped_column(ARRAY(Integer))
     is_read:Mapped[Boolean] = mapped_column(Boolean)
+    mugshot:Mapped[LargeBinary] = mapped_column(LargeBinary)
     creation_time:Mapped[DateTime] =  mapped_column(DateTime(timezone=True), default=func.now())
 
     frame:Mapped["Frame"]= relationship(back_populates='sightings')
     individual:Mapped["Individual"]= relationship(back_populates='sightings')
     alert:Mapped["Alert"]= relationship(back_populates='sighting')
 
-    def __init__(self, frame_id, individual_id, collection_id, body_coordinates, face_coordinates, object_coordinates, is_read):
+    def __init__(self, frame_id, individual_id, collection_id, body_coordinates, face_coordinates, object_coordinates, is_read, mugshot):
         self.frame_id = frame_id
         self.individual_id = individual_id
         self.collection_id = collection_id
@@ -27,6 +29,7 @@ class Sighting(db.Model):
         self.face_coordinates = face_coordinates
         self.object_coordinates = object_coordinates
         self.is_read = is_read
+        self.mugshot = mugshot
 
     def toJson(self):
         return {
@@ -39,5 +42,6 @@ class Sighting(db.Model):
         "object_coordinates":self.object_coordinates,
         "is_read":self.is_read,
         "individual":self.individual.toJson() if self.individual else None,
+        "mugshot":base64.b64encode(self.mugshot).decode('utf-8'), # Regresar en base 64
         "creation_time":self.creation_time.strftime("%H:%M"),
     }

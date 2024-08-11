@@ -22,12 +22,12 @@ class ReincidentAlertDeamon:
 
     def run(self):
         with self.app.app_context():
-            time.sleep(30) # Inicia en 30s
+            time.sleep(15) # Inicia en 30s
             while self.isRunning:
-                print(f"Running sendNotification at {datetime.now()}")
+                # print(f"Running sendNotification at {datetime.now()}")
                 self.sendNotification()
                 time.sleep(self.interval)
-                print(f"Finished sendNotification at {datetime.now()}", "\n")
+                # print(f"Finished sendNotification at {datetime.now()}", "\n")
 
     def stop(self):
         self.isRunning = False
@@ -54,6 +54,7 @@ class ReincidentAlertDeamon:
                     # print("data: ", data)
 
                     self.socketio.emit('notification', {'data': ''}) # Genera un evento
+                    print("SendNotification...")
 
                 sighting.is_read = True
                 db.session.commit() 

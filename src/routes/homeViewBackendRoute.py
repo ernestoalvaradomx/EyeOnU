@@ -14,6 +14,7 @@ class HomeViewBackendRoute():
         self.registerRoutes()
     
     def registerRoutes(self):
+        # TODO: Borrar
         @self.homeViewBackendRoute.route("/individuals", methods=['GET'])
         def listInvividual() -> list[Individual]:
             result = self.homeViewBackendService.findAllIndividual()

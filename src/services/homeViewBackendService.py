@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 
+from src.models.userModel import User
 from src.models.incidentModel import Incident
 from src.models.sightingModel import Sighting
 from src.models.alertModel import Alert
@@ -9,14 +10,16 @@ class HomeViewBackendService():
     def __init__(self, db:SQLAlchemy):
         self.db = db
 
+    # TODO: Borrar 
     def existsAlertByIndividualId(self, idIndividual):
         alerts = Alert.query.join(Sighting).filter_by(individual_id=idIndividual).all()
         return any(alert.is_read == False for alert in alerts)
     
     def existsAlertByIdSighting(self, idSighting):
-        alerts = Alert.query.filter_by(sighting_id=idSighting).all()
-        return len(alerts) == 0
+        alert = Alert.query.filter_by(sighting_id=idSighting).first()
+        return alert is not None
 
+    # TODO: Borrar
     def findAllIndividual(self) -> list[Individual]:
        response: list[Individual] = Individual.query.all()
        individualList = [individual.toJson() for individual in response if self.existsAlertByIndividualId(individual.id)]
@@ -29,7 +32,13 @@ class HomeViewBackendService():
     
     def findAllSighting(self):
         response: list[Sighting] = Sighting.query.all()
-        sightingList = [sighting.toJson() for sighting in response if self.existsAlertByIdSighting(sighting.id)]
+        sightingList = []
+        for sighting in response:
+            if not self.existsAlertByIdSighting(sighting.id):
+                data = sighting.toJson()
+                data["individual"] = ""
+                sightingList.append(data)
+            
         return sightingList
     
     def findAllIncidenByIdIndividual(self, idIndividual) -> list[Incident]:
@@ -37,8 +46,9 @@ class HomeViewBackendService():
 
         incidentsList = []
         for incident in response:
-            incident.alert.sighting.individual = None
-            incidentsList.append(incident.toJson())
+            data = incident.toJson()
+            data["alert"]["sighting"]["individual"] = ""
+            incidentsList.append(data)
         return incidentsList
     
     def createIncident(self, data) -> None:
@@ -56,6 +66,17 @@ class HomeViewBackendService():
         newAlert = Incident(alert_id=alertId, user_id=data["idUser"], description=data["description"])
         self.db.session.add(newAlert)
         self.db.session.commit()
+
+    def countUsers(self):
+        response: list[User] = User.query.all()
+        return len(response)
+
+    def createUser(self):
+        newUser = User()
+        self.db.session.add(newUser)
+        self.db.session.commit()
+        return newUser.id != None
+
 
 
 
