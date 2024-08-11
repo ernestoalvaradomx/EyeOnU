@@ -32,17 +32,17 @@ services:
     env_file:
       - .env
 
-  # fletApp:
-  #   build: ./myApp
-  #   container_name: eyeonu-app
-  #   image: eyeonu-app  # Nombre personalizado para la imagen
-  #   command: flet run 
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - flaskApi
-  #   networks:
-  #     - develop
+  fletApp:
+    build: ./myApp
+    container_name: eyeonu-app
+    image: eyeonu-app  # Nombre personalizado para la imagen
+    command: flet run --android
+    ports:
+      - "8551:8551"
+    depends_on:
+      - flaskApi
+    networks:
+      - develop
   
   demo_rtsp_server:
     image: bluenviron/mediamtx:latest-ffmpeg 
