@@ -75,6 +75,7 @@ def main(page: ft.Page):
     def route_change(route): 
 
         sightings = listSighting() 
+        # print(sightings)
 
         def check_item_clicked(e):
             e.control.checked = not e.control.checked
@@ -181,6 +182,8 @@ def main(page: ft.Page):
 
         if page.route.startswith("/store"):
             # Obtener parámetros de la URL
+            for param in page.route.split("?")[1].split("&"):
+                print(param)
             params = {param.split(" ")[0]: param.split(" ")[1] for param in page.route.split("?")[1].split("&")}
             id = params.get("id", "N/A")
             hora = params.get("hora", "N/A")
@@ -270,5 +273,6 @@ def main(page: ft.Page):
     page.on_route_change = route_change
     page.on_view_pop = view_pop
     page.go(page.route)
+    # page.update()
 
 ft.app(target=main, view=ft.AppView.WEB_BROWSER)

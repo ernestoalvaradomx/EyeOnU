@@ -70,26 +70,26 @@ if __name__ == "__main__":
     parser.add_argument('--ii', action='store_true', help='Run ImageIdentificationDeamon')
     args = parser.parse_args()
 
+    with app.app_context(): # Crea un usuario de prueba
+            if homeViewBackendService.countUsers() == 0:
+                response = homeViewBackendService.createUser() 
+                logger.info("User test create: " + str(response))
+
     # Carga servicio segun bandera de test
     frameService = RawFrameService() 
     video_feed_url=None
     if args.test:
         frameService = RawFrameServiceMock()
         logger.info("Test mode")
-
-        with app.app_context(): # Crea un usuario de prueba
-            if homeViewBackendService.countUsers() == 0:
-                response = homeViewBackendService.createUser() 
-                logger.info("User test create: " + str(response))
     
     if args.demo:
         logger.info("Running demo mode")
         video_feed_url=DEMO_STREAM
         
     if args.ii:
-        ImageIdentificationDeamon(interval=15, app=app, rawFrameService=frameService, video_feed_url=video_feed_url) # Carga deamon cada 30 segundos
+        ImageIdentificationDeamon(interval=300, app=app, rawFrameService=frameService, video_feed_url=video_feed_url) # Carga deamon cada 30 segundos
         logger.info("Active ImageIdentificationDeamon")
-    ReincidentAlertDeamon(interval=5, app=app, socketio=socketio)
+    ReincidentAlertDeamon(interval=150, app=app, socketio=socketio)
 
     # socketio.run(app, debug=True)
     # socketio.run(app, host='0.0.0.0', port=5000) # Desarrollo
