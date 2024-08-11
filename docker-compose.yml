@@ -50,7 +50,7 @@ services:
     ports:
       - "8554:8554"
     volumes:
-      - C:/Users/leoll/OneDrive/Desktop/Programacion/Python/EyeOnU/EyeOnU/test_stream/rtsp-simple-server.yml:/rtsp-simple-server.yml
+      - ./test_stream/rtsp-simple-server.yml:/rtsp-simple-server.yml
     networks:
       - develop
 
@@ -59,7 +59,7 @@ services:
     container_name: demo-video-feed
     command: -re -stream_loop -1 -i /test_stream/video_feed.mp4 -c:v h264 -f rtsp -rtsp_transport tcp rtsp://demo-rtsp-server:8554/live.stream
     volumes:
-      - C:/Users/leoll/OneDrive/Desktop/Programacion/Python/EyeOnU/EyeOnU/test_stream:/test_stream
+      - ./test_stream:/test_stream
     networks:
       - develop
     depends_on:
