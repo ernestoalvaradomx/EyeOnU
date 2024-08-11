@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, timedelta
 
 from src.models.userModel import User
 from src.models.incidentModel import Incident
@@ -31,7 +32,11 @@ class HomeViewBackendService():
         return alertList
     
     def findAllSighting(self):
-        response: list[Sighting] = Sighting.query.all()
+        # Calcular el tiempo limite (5 minutos atras)
+        timeLimit = datetime.now() - timedelta(minutes=5)
+        # print("timeLimit:", timeLimit)
+
+        response: list[Sighting] = Sighting.query.filter(Sighting.creation_time > timeLimit).all()
         sightingList = []
         for sighting in response:
             if not self.existsAlertByIdSighting(sighting.id):
