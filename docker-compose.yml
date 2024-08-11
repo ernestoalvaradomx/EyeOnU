@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile
     container_name: eyeonu-api
     image: eyeonu-api  # Nombre personalizado para la imagen
-    command: python app.py --demo 
+    command: python app.py --demo --ii
     ports:
       - "5000:5000"
     depends_on:
