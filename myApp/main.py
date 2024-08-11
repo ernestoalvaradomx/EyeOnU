@@ -64,7 +64,6 @@ text_field = ft.TextField(multiline=True, width=300, height=100)
 text_field_incidene = ft.TextField(multiline=True, width=300, height=100)
 
 def main(page: ft.Page):
-    print("Start front on http://127.0.0.1:8551")
     page.title = "Routes Example"
 
     def route_change(route):
@@ -470,5 +469,7 @@ def main(page: ft.Page):
     page.on_view_pop = view_pop
     page.go(page.route)
 
-# ft.app(target=main, view=ft.AppView.WEB_BROWSER)
-ft.app(target=main, port=8551, host="0.0.0.0")
+if __name__ == "__main__":
+    print("Start front on http://127.0.0.1:8551/app/main.py")
+    # ft.app(target=main, view=ft.AppView.WEB_BROWSER)
+    ft.app(target=main, port=8551, host="0.0.0.0")
