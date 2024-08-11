@@ -36,7 +36,7 @@ services:
   #   build: ./myApp
   #   container_name: eyeonu-app
   #   image: eyeonu-app  # Nombre personalizado para la imagen
-  #   command: flet run --android
+  #   command: flet run 
   #   ports:
   #     - "3000:3000"
   #   depends_on:
