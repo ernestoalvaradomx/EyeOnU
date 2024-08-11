@@ -185,6 +185,12 @@ def main(page: ft.Page):
             id = sighting["individual"]["id"] 
             creation_time = sighting["individual"]["creation_time"]
             idAlert = notification["id"]
+            objectCordinates = sighting["object_coordinates"]
+            typeAlert = "without dangerous object"
+            
+            if(len(objectCordinates) > 0):
+                typeAlert = "dangerous object"
+            
 
             list_view_notifications.append(
                 ft.TextButton(
@@ -205,6 +211,7 @@ def main(page: ft.Page):
                             ft.Container(
                                 content=ft.Column(
                                     controls=[
+                                        ft.Text(f"{typeAlert}", size=10, color="#C70039"),
                                         ft.Text(f"The individual with id {id} has committed a repeat offense", color="#000000"),
                                     ],
                                     alignment=ft.MainAxisAlignment.START,
@@ -213,7 +220,7 @@ def main(page: ft.Page):
                                 ),
                                 bgcolor=ft.colors.GREY_300,
                                 width=150,
-                                height=50
+                                height=70
                             ),
                         ],
                         vertical_alignment=ft.CrossAxisAlignment.CENTER
